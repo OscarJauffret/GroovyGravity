@@ -25,6 +25,8 @@ endif ()
 # 3. Define the executable (assumes main.cpp is in the same folder)
 add_executable(${PROJECT_NAME}
         src/main.cpp
+        src/object.cpp
+        include/config.hpp
 )
 
 # 3.5 Get the graphics library

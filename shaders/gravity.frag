@@ -2,8 +2,6 @@
 in vec3 vColor;
 out vec4 FragColor;
 
-uniform float uTint;   // exercises setFloat; pulses brightness over time
-
 void main() {
-    FragColor = vec4(vColor * uTint, 1.0);
+    FragColor = vec4(vColor, 1.0);
 }
