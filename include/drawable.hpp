@@ -36,7 +36,7 @@ protected:
     }
 
 public:
-    void draw() {
+    virtual void draw() {
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
     }

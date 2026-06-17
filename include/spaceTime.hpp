@@ -14,6 +14,8 @@
 class SpaceTime: public Drawable {
 public:
     explicit SpaceTime(int resolution, float size);
+
+    void draw() override;
 };
 
 

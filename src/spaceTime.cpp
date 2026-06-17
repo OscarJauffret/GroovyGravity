@@ -40,3 +40,8 @@ SpaceTime::SpaceTime(int resolution, float size) {
     indexCount = indices.size();
     setup(vertices, indices);
 }
+
+void SpaceTime::draw() {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    Drawable::draw();
+}

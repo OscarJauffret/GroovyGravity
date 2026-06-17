@@ -51,7 +51,7 @@ void Object::computeVerticesAndIndices() {
     setup(vertices, indices);
 }
 
-
-void Object::toShader(const Shader& shader) {
-    shader.setVec4("object", glm::vec4(x, y, z ,radius));
+void Object::draw() {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    Drawable::draw();
 }

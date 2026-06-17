@@ -46,8 +46,6 @@ int main() {
         100.0f
     );
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
     while (!window.shouldClose()) {
         float now = static_cast<float>(glfwGetTime());
         float dt  = now - lastFrame;

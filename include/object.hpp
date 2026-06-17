@@ -19,7 +19,7 @@ public:
     Object(const float mass, const float radius, float pos[3]): mass(mass), radius(radius), x(pos[0]), y(pos[1]), z(pos[2]) {
         computeVerticesAndIndices();
     }
-    void toShader(const Shader& shader);
+    void draw() override;
 };
 
 
