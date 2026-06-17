@@ -27,6 +27,9 @@ add_executable(${PROJECT_NAME}
         src/main.cpp
         src/object.cpp
         include/config.hpp
+        src/spaceTime.cpp
+        include/spaceTime.hpp
+        include/Drawable.hpp
 )
 
 # 3.5 Get the graphics library
