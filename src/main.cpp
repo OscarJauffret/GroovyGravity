@@ -18,7 +18,8 @@ int main() {
     glEnable(GL_DEPTH_TEST);
 
     std::string dir = SHADER_DIR;
-    Shader shader((dir + "/gravity.vert").c_str(), (dir + "/gravity.frag").c_str());
+    Shader objectShader((dir + "/object.vert").c_str(), (dir + "/common.frag").c_str());
+    Shader spaceTimeShader((dir + "/spaceTime.vert").c_str(), (dir + "/common.frag").c_str());
 
     Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -62,18 +63,25 @@ int main() {
 
         // Hot-reload on a rising edge of R, so it fires once per press.
         bool rHeld = glfwGetKey(h, GLFW_KEY_R) == GLFW_PRESS;
-        if (rHeld && !rHeldLastFrame) shader.reload();
+        if (rHeld && !rHeldLastFrame) {
+            spaceTimeShader.reload();
+            objectShader.reload();
+        }
         rHeldLastFrame = rHeld;
 
         window.clear(0.1f, 0.1f, 0.12f, 1.0f);  // clears color + depth by default
 
-        shader.use();
-        shader.setMat4("uModel", model);
-        shader.setMat4("uView", camera.getViewMatrix());
-        shader.setMat4("uProj", projection);
-
-        //object.toShader(shader);
+        spaceTimeShader.use();
+        spaceTimeShader.setMat4("uModel", model);
+        spaceTimeShader.setMat4("uView", camera.getViewMatrix());
+        spaceTimeShader.setMat4("uProj", projection);
         spaceTime.draw();
+
+        objectShader.use();
+        objectShader.setMat4("uModel", model);
+        objectShader.setMat4("uView", camera.getViewMatrix());
+        objectShader.setMat4("uProj", projection);
+
         object1.draw();
         object2.draw();
 
