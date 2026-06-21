@@ -4,7 +4,7 @@
 
 #include "spaceTime.hpp"
 
-SpaceTime::SpaceTime(int resolution, float size) {
+SpaceTime::SpaceTime(int resolution, float size, glm::vec3 color) {
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
 
@@ -14,9 +14,12 @@ SpaceTime::SpaceTime(int resolution, float size) {
             float x = (float)i / (float)resolution * size - size/2.0f;
             float z = (float)j / (float)resolution * size - size/2.0f;
 
-            vertices.push_back(x);    // X
-            vertices.push_back(0.0f); // Y (Water surface)
-            vertices.push_back(z);    // Z
+            vertices.push_back(x);      // X
+            vertices.push_back(0.0f); // Y
+            vertices.push_back(z);      // Z
+            vertices.push_back(color[0]);
+            vertices.push_back(color[1]);
+            vertices.push_back(color[2]);
         }
     }
 

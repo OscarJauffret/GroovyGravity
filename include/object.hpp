@@ -13,11 +13,11 @@ private:
     float radius;
     float x; float y; float z;
 
-    void computeVerticesAndIndices();
+    void computeVerticesAndIndices(glm::vec3 color);
 
 public:
-    Object(const float mass, const float radius, float pos[3]): mass(mass), radius(radius), x(pos[0]), y(pos[1]), z(pos[2]) {
-        computeVerticesAndIndices();
+    Object(const float mass, const float radius, float pos[3], glm::vec3 color): mass(mass), radius(radius), x(pos[0]), y(pos[1]), z(pos[2]) {
+        computeVerticesAndIndices(color);
     }
     void draw() override;
 };

@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 #include <vector>
 #include <iostream>
+#include <glm/vec4.hpp>
 
 using namespace std;
 
@@ -14,6 +15,7 @@ class Drawable {
 protected:
     unsigned int VAO, VBO, EBO;
     unsigned int indexCount;
+
     void setup(const std::vector<float>& vertices, const std::vector<unsigned int>& indices) {
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -27,9 +29,15 @@ protected:
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
+        int stride = 6;
         // Layout 0: Position
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+
+        // Layout 1: color
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float),
+                              (void*)(stride/2 * sizeof(float)));
+        glEnableVertexAttribArray(1);
 
         glBindVertexArray(0);
         cout << "Set up" << endl;

@@ -32,7 +32,7 @@ int main() {
         });
 
     float pos[3] = {0.0f, 0.0f, 0.0f};
-    Object object(100, 10, pos);
+    Object object(100, 10, pos, {1.0, 0.1, 0.2});
     SpaceTime spaceTime(100, 200);
     float lastFrame = 0.0f;
     bool  rHeldLastFrame = false;
@@ -72,9 +72,7 @@ int main() {
         shader.setMat4("uProj", projection);
 
         //object.toShader(shader);
-        shader.setInt("type", 0);
         spaceTime.draw();
-        shader.setInt("type", 1);
         object.draw();
 
         window.swapBuffers();

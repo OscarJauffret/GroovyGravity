@@ -8,12 +8,13 @@
 
 #include <GL/glew.h>
 #include <vector>
+#include <glm/vec3.hpp>
 
 #include "drawable.hpp"
 
 class SpaceTime: public Drawable {
 public:
-    explicit SpaceTime(int resolution, float size);
+    explicit SpaceTime(int resolution, float size, glm::vec3 color = {1.0, 1.0, 1.0});
 
     void draw() override;
 };
