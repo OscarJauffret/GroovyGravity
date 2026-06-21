@@ -29,6 +29,10 @@ add_executable(${PROJECT_NAME}
         src/spaceTime.cpp
 )
 
+add_executable(test
+    src/test.cpp
+)
+
 # 3.5 Get the graphics library
 include(FetchContent)
 FetchContent_Declare(

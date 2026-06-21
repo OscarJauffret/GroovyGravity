@@ -53,6 +53,22 @@ void Object::computeVerticesAndIndices(glm::vec3 color) {
 }
 
 void Object::draw() {
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     Drawable::draw();
+}
+
+float Object::getMass() const{
+    return mass;
+}
+
+float Object::getX() const {
+    return x;
+}
+
+float Object::getY() const {
+    return y;
+}
+
+float Object::getZ() const {
+    return z;
 }

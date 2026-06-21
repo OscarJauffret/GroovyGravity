@@ -33,9 +33,10 @@ int main() {
 
     float pos1[3] = {0.0f, 0.0f, 0.0f};
     float pos2[3] = {pos1[0] + 10, pos1[1], pos1[2]};
-    Object object1(100, 1, pos1, {165, 70, 87});
-    Object object2(1000, 2, pos2, {192, 200, 255});
-    SpaceTime spaceTime(100, 200);
+    float sunMass = 3.36 * pow(10, 28);
+    Object object0(sunMass, 1, pos1, {252, 229, 112});  // sun
+    Object object1(1000, 2, pos2, {192, 200, 255});
+    SpaceTime spaceTime(1000, 1000);
     float lastFrame = 0.0f;
     bool  rHeldLastFrame = false;
 
@@ -75,6 +76,12 @@ int main() {
         spaceTimeShader.setMat4("uModel", model);
         spaceTimeShader.setMat4("uView", camera.getViewMatrix());
         spaceTimeShader.setMat4("uProj", projection);
+
+        auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object object, int id) {
+            spaceTimeShader.setVec3("object[" + std::to_string(id) + "]", glm::vec3(object.getMass(), object.getX(), object.getZ()));
+        };
+        sendObjectToSpaceTimeShader(object0, 0);
+        //sendObjectToSpaceTimeShader(object1, 1);
         spaceTime.draw();
 
         objectShader.use();
@@ -82,8 +89,8 @@ int main() {
         objectShader.setMat4("uView", camera.getViewMatrix());
         objectShader.setMat4("uProj", projection);
 
+        object0.draw();
         object1.draw();
-        object2.draw();
 
         window.swapBuffers();
         window.pollEvents();

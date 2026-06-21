@@ -6,10 +6,32 @@ uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProj;
 
+uniform vec3 objects[2];    // x: mass, y: x, z: z
+
 out vec3 vColor;
 
-void main() {
-    //vec3 objectPos = vec3(object[0], object[1], object[2]);
-    gl_Position = uProj * uView * uModel * vec4(aPos[0], aPos[1], aPos[2], 1.0);
+void main() {;
+    // $z(x, y) = 2 \sqrt{r_S(\sqrt{x^2 + y^2} - r_S)}
+    vec3 offset = vec3(0);
+
+    for (int i = 0; i < 1; i++) {
+        // r_S = 2GM/c^2
+        float G = 6.6743 * pow(10, -11);
+        double c2 = 299792458 * 299792458;
+        double rs =  2 * G * objects[i].x / c2;
+        float x2 = aPos[0] * aPos[0];
+        float y2 = aPos[2] * aPos[2];
+        if ((sqrt(x2 + y2) - rs) > 0) { // means we are outside of the event horizon
+            offset -= vec3(0, 2 * sqrt(rs * (sqrt(x2 + y2) - rs)), 0);
+        } else { // Otherwise, we will offset a certain value i suppose
+            offset -= vec3(0, 5, 0);
+        }
+    }
+    /*
+             if (aPos[0] * aPos[0] <= 10 && aPos[2] * aPos[2] <= 10) {
+        offset -= vec3(0, 5, 0);
+    }*/
+    vec3 finalPos = aPos + offset;
+    gl_Position = uProj * uView * uModel * vec4(finalPos[0], finalPos[1], finalPos[2], 1.0);
     vColor = spaceTimeColor;
 }

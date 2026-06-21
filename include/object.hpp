@@ -20,6 +20,12 @@ public:
         computeVerticesAndIndices(color);
     }
     void draw() override;
+
+    [[nodiscard]] float getMass() const;
+    [[nodiscard]] float getX() const;
+    [[nodiscard]] float getY() const;
+    [[nodiscard]] float getZ() const;
+
 };
 
 
