@@ -5,6 +5,7 @@
 #include "spaceTime.hpp"
 
 SpaceTime::SpaceTime(int resolution, float size, glm::vec3 color) {
+    normalizeRGB(color);
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
 

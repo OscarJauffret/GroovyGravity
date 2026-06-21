@@ -7,19 +7,18 @@
 
 #include "config.hpp"
 #include <iostream>
+#include <numbers>
 
 using namespace std;
 
 void Object::computeVerticesAndIndices(glm::vec3 color) {
+    normalizeRGB(color);
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
-    // vertices.push_back(x);
-    // vertices.push_back(y);
-    // vertices.push_back(z);
 
-    for (int i = 0; i < config::render::angular_resolution; i++) {
-        for (int j = 0; j < config::render::angular_resolution; j++) {
-            float theta = static_cast<float>(i) / config::render::angular_resolution * config::pi * 2;
+    for (int i = 0; i <= config::render::angular_resolution; i++) {
+        for (int j = 0; j <= config::render::angular_resolution; j++) {
+            float theta = static_cast<float>(i) / config::render::angular_resolution * numbers::pi * 2;
             float phi = static_cast<float>(j) / config::render::angular_resolution * config::pi * 2;
             float xp = x + radius * cos(phi) * cos(theta);
             float yp = y + radius * cos(phi) * sin(theta);
@@ -32,8 +31,8 @@ void Object::computeVerticesAndIndices(glm::vec3 color) {
             vertices.push_back(color[2]);
         }
     }
-    // 2. Generate Indices (The "Stitching")
-    for (int i = 0; i <= config::render::angular_resolution; i++) {
+
+    for (int i = 0; i < config::render::angular_resolution; i++) {
         int k1 = i * (config::render::angular_resolution + 1);
         int k2 = k1 + config::render::angular_resolution + 1;
         for (int j = 0; j < config::render::angular_resolution; j++, k1++, k2++) {

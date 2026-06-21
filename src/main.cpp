@@ -5,8 +5,7 @@
 #include <graphics/window.hpp>
 #include <graphics/camera.hpp>
 #include <graphics/shader.hpp>
-#include <object.hpp>
-
+#include "object.hpp"
 #include "config.hpp"
 #include "spaceTime.hpp"
 
@@ -31,8 +30,10 @@ int main() {
             cam->processMouse(x, y);
         });
 
-    float pos[3] = {0.0f, 0.0f, 0.0f};
-    Object object(100, 10, pos, {1.0, 0.1, 0.2});
+    float pos1[3] = {0.0f, 0.0f, 0.0f};
+    float pos2[3] = {pos1[0] + 10, pos1[1], pos1[2]};
+    Object object1(100, 1, pos1, {165, 70, 87});
+    Object object2(1000, 2, pos2, {192, 200, 255});
     SpaceTime spaceTime(100, 200);
     float lastFrame = 0.0f;
     bool  rHeldLastFrame = false;
@@ -73,7 +74,8 @@ int main() {
 
         //object.toShader(shader);
         spaceTime.draw();
-        object.draw();
+        object1.draw();
+        object2.draw();
 
         window.swapBuffers();
         window.pollEvents();
