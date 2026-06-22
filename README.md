@@ -177,3 +177,6 @@ Now it's a bit clearer. It looks like there's just an offset. Maybe it's because
 that is then being added twice (for each object). 
 
 Maybe Flamm's paraboloid is not additive. annoying
+
+Also, [this article](https://physics.stackexchange.com/questions/561289/shape-of-curved-spacetime#:~:text=However%2C%20it%20should,as%20in%20space.) says that
+Flamm's paraboloid only describes space, and not spacetime. That is fine for my visualization I think
