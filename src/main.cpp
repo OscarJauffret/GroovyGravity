@@ -36,7 +36,7 @@ int main() {
     float sunMass =  3.36648e+27;
     Object object0(sunMass, 5, pos1, {252, 229, 112});  // sun
     Object object1(1000, 2, pos2, {192, 200, 255});
-    SpaceTime spaceTime(10, 10);
+    SpaceTime spaceTime(50, 50);
     float lastFrame = 0.0f;
     bool  rHeldLastFrame = false;
 
@@ -78,8 +78,7 @@ int main() {
         spaceTimeShader.setMat4("uProj", projection);
 
         auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object& object, int id) {
-            cout << "mass: " << object.getMass() << endl;
-            spaceTimeShader.setVec3("object[" + std::to_string(id) + "]", glm::vec3(object.getMass(), object.getX(), object.getZ()));
+            spaceTimeShader.setVec3("objects[" + std::to_string(id) + "]", glm::vec3(object.getMass(), object.getX(), object.getZ()));
         };
         sendObjectToSpaceTimeShader(object0, 0);
         //sendObjectToSpaceTimeShader(object1, 1);

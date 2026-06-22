@@ -127,3 +127,21 @@ Yeah well that seems about right, the values are not close to zero or anything (
 
 It also seems like the units for the spacetime mesh are the same as the ones for the sphere, because when I generate a 
 mesh with size 10, it perfectly fits the sphere.
+
+Hmmmmmm, it seems like rs is always smaller than 0: 
+```c++
+double rs =  2 * G * objects[0].x / c2;
+if (rs < 1e-3) {
+    c = vec3(0.0, 1.0, 1.0);
+}
+```
+This does indeed color the mesh cyan. Interesting because it should be close to 5 with the values we are using.
+
+I FOUND IT, when i wrote the lambda function to send the objects to the shader, i forgot an "s" at "objects"...... oops 😶‍🌫️
+```c++
+auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object& object, int id) {
+    spaceTimeShader.setVec3("objects[" + std::to_string(id) + "]", glm::vec3(object.getMass(), object.getX(), object.getZ()));
+};
+```
+
+![image](img/2026-06-22_curved_spacetime.png)

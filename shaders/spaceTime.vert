@@ -11,7 +11,7 @@ uniform vec3 objects[2];    // x: mass, y: x, z: z
 out vec3 vColor;
 
 void main() {;
-    // $z(x, y) = 2 \sqrt{r_S(\sqrt{x^2 + y^2} - r_S)}
+    // z(x, y) = 2 \sqrt{r_S(\sqrt{x^2 + y^2} - r_S)}
     vec3 offset = vec3(0.0);
     vec3 pos0 = aPos;
     vec3 c;
@@ -25,17 +25,10 @@ void main() {;
         float y2 = pos0.z * pos0.z;
         double distance = sqrt(x2 + y2) - rs;
         if (distance > 0) { // means we are outside of the event horizon
-            offset -= vec3(0, 2 * sqrt(rs * distance), 0);
-            c = vec3(0.0, 1.0, 0.0);
-        } else { // Otherwise, we will color the pixel red
-            c = vec3(1.0, 0.0, 0.0);
+            offset += vec3(0, 2 * sqrt(rs * distance), 0);
         }
     }
-    /*
-             if (aPos[0] * aPos[0] <= 10 && aPos[2] * aPos[2] <= 10) {
-        offset -= vec3(0, 5, 0);
-    }*/
     vec3 finalPos = pos0 + offset;
     gl_Position = uProj * uView * uModel * vec4(finalPos, 1.0);
-    vColor = c;
+    vColor = spaceTimeColor;
 }
