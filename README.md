@@ -97,7 +97,7 @@ of a for loop, it seemed to work. I'll try removing the for loop for now.
 Doesn't solve it, but at least that means that we'll be able to use our for loop later.
 
 I tried coloring the vertices with respect to their distance to the origin. My goal was to color vertices that 
-are close to {0, 0} in black, and far from {0, 0} go to red. It seems like it's working, the pixel in the very center is black
+are close to {0, 0} in black, and far from {0, 0} go to red. It seems like it's working, the pixel in the very center is black (barely visible)
 ```c++
 double distanceToOrigin = sqrt(x2 + y2);
 vec3 c = vec3(1.0, 0, 0) * vec3(1 - 1/(distanceToOrigin + 1));
