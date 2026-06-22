@@ -53,7 +53,7 @@ void Object::computeVerticesAndIndices(glm::vec3 color) {
 }
 
 void Object::draw() {
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     Drawable::draw();
 }
 

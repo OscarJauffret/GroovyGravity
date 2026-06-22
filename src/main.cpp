@@ -32,11 +32,11 @@ int main() {
         });
 
     float pos1[3] = {0.0f, 0.0f, 0.0f};
-    float pos2[3] = {pos1[0] + 10, pos1[1], pos1[2]};
+    float pos2[3] = {pos1[0] + 20, pos1[1], pos1[2] + 10};
     float sunMass =  3.36648e+21;   // Expressed in millions of kg
     Object object0(sunMass, 5, pos1, {252, 229, 112});  // sun
-    Object object1(1000, 2, pos2, {192, 200, 255});
-    SpaceTime spaceTime(50, 50);
+    Object object1(sunMass/2, 2.5, pos2, {192, 200, 255});
+    SpaceTime spaceTime(200, 200);
     float lastFrame = 0.0f;
     bool  rHeldLastFrame = false;
 
@@ -81,7 +81,7 @@ int main() {
             spaceTimeShader.setVec3("objects[" + std::to_string(id) + "]", glm::vec3(object.getMass(), object.getX(), object.getZ()));
         };
         sendObjectToSpaceTimeShader(object0, 0);
-        //sendObjectToSpaceTimeShader(object1, 1);
+        sendObjectToSpaceTimeShader(object1, 1);
         spaceTime.draw();
 
         objectShader.use();
@@ -90,7 +90,7 @@ int main() {
         objectShader.setMat4("uProj", projection);
 
         object0.draw();
-        //object1.draw();
+        object1.draw();
 
         window.swapBuffers();
         window.pollEvents();

@@ -9,11 +9,12 @@ using namespace std;
 int main() {
     for (int i = 0; i < 1; i++) {
         // r_S = 2GM/c^2
+        double desiredRs = 10;
         double c2 = 299792458.0 * 299792458;
         double G = 6.6743 * pow(10, -11);
-        //double mass = desiredRs * c2/(2 * G);
-        float mass =  3.36648e+27;
-        //cout << "Mass required for rs=" << desiredRs << " is " << mass << endl;
+        double mass = desiredRs * c2/(2 * G);
+        //float mass =  3.36648e+27;
+        cout << "Mass required for rs=" << desiredRs << " is " << mass << endl;
         double rs =  2 * G * mass / c2;
         cout << "rs: " << rs << std::endl;
         double x = 5;

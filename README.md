@@ -145,3 +145,35 @@ auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object& object, int id) {
 ```
 
 ![image](img/2026-06-22_curved_spacetime.png)
+
+Alright, now I'd like to be able to have multiple objects that each curve spacetime. For this, I need to change the formula a
+little bit, because currently, it only curves spacetime at the origin, regardless of the position of the object: example with a
+second object that has the same mass as the first one, but twice the radius:
+
+![image](img/2026-06-22_two_masses_formula_not_adapted.png)
+
+Clearly, spacetime is bent twice in the same location. Here is my first attempt: we do a change of coordinates:
+```c++
+uniform vec3 objects[2];    // x: mass, y: x, z: z
+[...]
+float x = pos0.x - objects[i].y;
+float y = pos0.z - objects[i].z;
+float x2 = x * x;
+float y2 = y * y;
+```
+
+It looks alright, but there seems to be something missing, because it stops before it can reach the objects
+![image](img/2026-06-22_two_masses_not_yet.png)
+
+I'm also not too sure how to choose the masses and the radii. In real life, the sun's radius is much larger than the associated $r_s$
+For now, I think i'll keep objects that have a radius that is exactly $r_s$. This means for the second mass, we need to reduce its mass:
+
+$mass = c^2 r_S/2G = 6.73295 * 10^{27}$
+
+Twice as massive, who would've thought. I think I'd rather have an object that's half the radius and half the mass in the end.
+
+![image](img/2026-06-22_two_masses_not_yet_smaller.png)
+Now it's a bit clearer. It looks like there's just an offset. Maybe it's because there is a "static" component to the curvature
+that is then being added twice (for each object). 
+
+Maybe Flamm's paraboloid is not additive. annoying
