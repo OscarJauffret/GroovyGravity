@@ -33,7 +33,7 @@ int main() {
 
     float pos1[3] = {0.0f, 0.0f, 0.0f};
     float pos2[3] = {pos1[0] + 10, pos1[1], pos1[2]};
-    float sunMass =  3.36648e+27;
+    float sunMass =  3.36648e+21;   // Expressed in millions of kg
     Object object0(sunMass, 5, pos1, {252, 229, 112});  // sun
     Object object1(1000, 2, pos2, {192, 200, 255});
     SpaceTime spaceTime(50, 50);
