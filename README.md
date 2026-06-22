@@ -57,7 +57,73 @@ square rooted. Yeah, well  the argument can only be positive if $\sqrt{x^2 + y^2
 
 Aahhh, this is because Flamm's paraboloid is only valid for regions outside of the event horizon. I guess either we scale down the objects, or we scale our simulation up.
 But the Sun doesn't have an event horizon, its radius is directly larger than what would be the event horizon. That's weird because the radius
-of the object does not appear in the formula. For now let's scale down then. Say we have a mesh for spacetime of 1000x1000,
-and we want $r_S$ = 50. So, we need a mass that is $3.36 * 10^{28}$kg.
+of the object does not appear in the formula. For now let's scale down then. Say we have a mesh for spacetime of 300x300,
+and we want $r_S$ = 5. So, we need a mass that is 
+
+$mass = c^2 r_S/2G = 3.36648 * 10^{27}$
 
 Didn't have time to finish solving this today, so i'll continue next time
+
+## 22/06
+It is possible that the formula I have is not suited for objects that do not have an even horizon, i don't know.
+
+Hmm, when i send the object to the shader, the object itself is no longer drawn. If we pass by reference it works.
+
+I don't understand, because it seems like only the point at {0, 0} is being passed through the spaceTimeShader.
+![image](img/2026-06-22_Only_00.png)
+This is with this code in spaceTime.vert:
+```c++
+for (int i = 0; i < 1; i++) {
+    // r_S = 2GM/c^2
+    float G = 6.6743 * pow(10, -11);
+    double c2 = 299792458 * 299792458;
+    double rs =  2 * G * objects[i].x / c2;
+    float x2 = aPos[0] * aPos[0];
+    float y2 = aPos[2] * aPos[2];
+    if ((sqrt(x2 + y2) - rs) > 0) { // means we are outside of the event horizon
+        offset -= vec3(0, 2 * sqrt(rs * (sqrt(x2 + y2) - rs)), 0);
+    } else { // Otherwise, we will offset a certain value i suppose
+        offset -= vec3(0, 5, 0);
+    }
+}
+```
+I thought it could have been because we need to reference aPos.x, and not aPos[0], but apparently not..
+
+When i remove the if check, and always offset by 5, it works, and I also notice that the FPS is much better (this part could be
+because there is no if anymore). Maybe it is because of the presence of the if statement (gpu doesn't like it? I know they don't like
+branching but come on, just a little bit of branching). But when i have an if statement outside
+of a for loop, it seemed to work. I'll try removing the for loop for now.
+
+Doesn't solve it, but at least that means that we'll be able to use our for loop later.
+
+I tried coloring the vertices with respect to their distance to the origin. My goal was to color vertices that 
+are close to {0, 0} in black, and far from {0, 0} go to red. It seems like it's working, the pixel in the very center is black
+```c++
+double distanceToOrigin = sqrt(x2 + y2);
+vec3 c = vec3(1.0, 0, 0) * vec3(1 - 1/(distanceToOrigin + 1));
+```
+![image](img/2026-06-22_red.png)
+![image](img/2026-06-22_center_black.png)
+Hm but it does work apparently, because when I change the color to green when it enters the if, it works
+```c++
+if (distance > 0) { // means we are outside of the event horizon
+    offset -= vec3(0, 2 * sqrt(rs * distance), 0);
+    c = vec3(0.0, 1.0, 0.0);
+} else { // Otherwise, we will offset a certain value i suppose
+    offset -= vec3(0, 5.0, 0);
+    c = vec3(1.0, 0.0, 0.0);
+}
+```
+But everything is still so flat, and I also don't understand why it's just the pixel at the very center that is red
+![image](img/2026-06-22_green.png)
+
+Could it be that the units used in the formula (meters), and the units defining my sphere (I thought they were meters) are not the same?
+Let's check what values the vertices of the spaceTime mesh are
+
+[-5, 0, -5, 1, 1, 1, -5, 0, -4, 1, 1, 1, -5, 0, -3, 1, 1, 1, -5, 0, -2, 1, 1, 1, -5, 0, -1, 1, 1, 1 ...]
+
+Yeah well that seems about right, the values are not close to zero or anything ({1, 1, 1} is just the color).
+Ì'm lost.
+
+It also seems like the units for the spacetime mesh are the same as the ones for the sphere, because when I generate a 
+mesh with size 10, it perfectly fits the sphere.

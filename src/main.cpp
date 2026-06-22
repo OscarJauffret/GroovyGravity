@@ -33,10 +33,10 @@ int main() {
 
     float pos1[3] = {0.0f, 0.0f, 0.0f};
     float pos2[3] = {pos1[0] + 10, pos1[1], pos1[2]};
-    float sunMass = 3.36 * pow(10, 28);
-    Object object0(sunMass, 1, pos1, {252, 229, 112});  // sun
+    float sunMass =  3.36648e+27;
+    Object object0(sunMass, 5, pos1, {252, 229, 112});  // sun
     Object object1(1000, 2, pos2, {192, 200, 255});
-    SpaceTime spaceTime(1000, 1000);
+    SpaceTime spaceTime(10, 10);
     float lastFrame = 0.0f;
     bool  rHeldLastFrame = false;
 
@@ -60,7 +60,7 @@ int main() {
         if (glfwGetKey(h, GLFW_KEY_A) == GLFW_PRESS) camera.moveLeft(dt);
         if (glfwGetKey(h, GLFW_KEY_D) == GLFW_PRESS) camera.moveRight(dt);
         if (glfwGetKey(h, GLFW_KEY_SPACE) == GLFW_PRESS) camera.moveUp(dt);
-        if (glfwGetKey(h, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) camera.moveDown(dt);
+        //if (glfwGetKey(h, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) camera.moveDown(dt);
 
         // Hot-reload on a rising edge of R, so it fires once per press.
         bool rHeld = glfwGetKey(h, GLFW_KEY_R) == GLFW_PRESS;
@@ -77,7 +77,8 @@ int main() {
         spaceTimeShader.setMat4("uView", camera.getViewMatrix());
         spaceTimeShader.setMat4("uProj", projection);
 
-        auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object object, int id) {
+        auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object& object, int id) {
+            cout << "mass: " << object.getMass() << endl;
             spaceTimeShader.setVec3("object[" + std::to_string(id) + "]", glm::vec3(object.getMass(), object.getX(), object.getZ()));
         };
         sendObjectToSpaceTimeShader(object0, 0);
@@ -90,7 +91,7 @@ int main() {
         objectShader.setMat4("uProj", projection);
 
         object0.draw();
-        object1.draw();
+        //object1.draw();
 
         window.swapBuffers();
         window.pollEvents();

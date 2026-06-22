@@ -12,26 +12,30 @@ out vec3 vColor;
 
 void main() {;
     // $z(x, y) = 2 \sqrt{r_S(\sqrt{x^2 + y^2} - r_S)}
-    vec3 offset = vec3(0);
+    vec3 offset = vec3(0.0);
+    vec3 pos0 = aPos;
+    vec3 c;
 
     for (int i = 0; i < 1; i++) {
-        // r_S = 2GM/c^2
+            // r_S = 2GM/c^2
         float G = 6.6743 * pow(10, -11);
-        double c2 = 299792458 * 299792458;
-        double rs =  2 * G * objects[i].x / c2;
-        float x2 = aPos[0] * aPos[0];
-        float y2 = aPos[2] * aPos[2];
-        if ((sqrt(x2 + y2) - rs) > 0) { // means we are outside of the event horizon
-            offset -= vec3(0, 2 * sqrt(rs * (sqrt(x2 + y2) - rs)), 0);
-        } else { // Otherwise, we will offset a certain value i suppose
-            offset -= vec3(0, 5, 0);
+        double c2 = 299792458.0 * 299792458;
+        double rs =  2 * G * objects[0].x / c2;
+        float x2 = pos0.x * pos0.x;
+        float y2 = pos0.z * pos0.z;
+        double distance = sqrt(x2 + y2) - rs;
+        if (distance > 0) { // means we are outside of the event horizon
+            offset -= vec3(0, 2 * sqrt(rs * distance), 0);
+            c = vec3(0.0, 1.0, 0.0);
+        } else { // Otherwise, we will color the pixel red
+            c = vec3(1.0, 0.0, 0.0);
         }
     }
     /*
              if (aPos[0] * aPos[0] <= 10 && aPos[2] * aPos[2] <= 10) {
         offset -= vec3(0, 5, 0);
     }*/
-    vec3 finalPos = aPos + offset;
-    gl_Position = uProj * uView * uModel * vec4(finalPos[0], finalPos[1], finalPos[2], 1.0);
-    vColor = spaceTimeColor;
+    vec3 finalPos = pos0 + offset;
+    gl_Position = uProj * uView * uModel * vec4(finalPos, 1.0);
+    vColor = c;
 }
