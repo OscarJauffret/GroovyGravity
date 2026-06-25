@@ -19,7 +19,7 @@ inline void orbit(Object& o1, Object& o2, double hsq) {
     double dy = o2.getY() - o1.getY();
     double dz = o2.getZ() - o1.getZ();
 
-    cout << "dx: " << dx << ", dy: " << dy << ",dz: " << dz << endl;
+    cout << "dx: " << dx << ", dy: " << dy << ", dz: " << dz << endl;
 
     double rsq = dx * dx + dy * dy + dz * dz;
     double r = sqrt(rsq);

@@ -480,3 +480,22 @@ Ok, if i give zero velocity in `x`, everything becomes a NaN immediately, i'll k
 
 I'll push for now, this is good already
 ![gif](img/2026-06-25_first_orbit.gif)
+
+Hmm, if I use the right radius for the earth, everything is a NaN as well...
+
+Wait, but that doesnt make any sense... When the earth's radius is set to `63710000.0f`, everythign works fine, the force at the 
+first time step is `3.42702e+22`. But when I set the earth's radius to its actual radius, which is `6371000.0f`, the force at the first
+time step is... `inf`??
+
+Wait nevermind, for some reason I tried again and the right radius now doesn't produce `inf`. Must've been the wind 😶‍🌫️..
+
+Ok, but when I do use the right radius, I don't see anything, and I suspect that the earth shoots super far... Let's set up a per-object
+scale for radii. Even better, I could just set a radius, and a separate renderRadius directly.
+
+Cool, I set it up, and now there's NaNs everywhere. Wtf is happening, the radius isn't even used anywhere, it's not needed 
+for anything, why even have a render radius, when the actual radius is useless. And why is everyting NaN.
+
+Ok, i'm not crazy
+![image](img/2026-06-25_I_am_not_crazy.jpg)
+When I run the same code multiple times, sometimes it produces NaNs, and sometimes not. This is an interesting behavior,
+and I cannot wait to debug it tomorrow 🥸 🤡

@@ -32,10 +32,10 @@ int main() {
             cam->processMouse(x, y);
         });
 
-    Object sun(config::CelestialBodies::Sun);  // sun
-    Object earth(config::CelestialBodies::Earth);
+    Object sun(config::CelestialBodies::Sun, 10);  // sun
+    Object earth(config::CelestialBodies::Earth, 5);
 
-    earth.setVz(29780);
+    earth.setVz(29290);
     earth.setVx(-150);
     SpaceTime spaceTime(200, config::CelestialBodies::Earth.pos[0] * 2.5);
     float lastFrame = 0.0f;

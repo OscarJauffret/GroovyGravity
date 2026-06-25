@@ -55,15 +55,4 @@ T scaleDistanceForRender(T val) {
     return config::render::distanceScale * val;
 }
 
-/**
- * Template function to scale down a value (used to scale down radii in the simulation)
- * @tparam T The type of the value
- * @param val The value
- * @return The scaled down value
- */
-template <typename T>
-T scaleRadiusForRender(T val) {
-    return config::render::radiiScale * val;
-}
-
 #endif //GROOVYGRAVITY_UTILS_HPP

@@ -16,7 +16,6 @@ void Object::computeVerticesAndIndices(glm::vec3 color) {
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
 
-    double renderRadius = scaleRadiusForRender(radius);
     double renderX = scaleDistanceForRender(x);
     double renderY = scaleDistanceForRender(y);
     double renderZ = scaleDistanceForRender(z);

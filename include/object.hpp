@@ -11,6 +11,7 @@ struct Object: public Drawable {
 private:
     const double mass;     // Mass of the object in kg
     const double radius;   // Radius of the object in meters
+    const double renderRadius;  // Radius of the object for rendering
 
     double x; double y; double z;  // Current position of the object (in meters relative to the origin)
     double vx; double vy; double vz;   // Current velocity of the object in m/s
@@ -31,17 +32,20 @@ public:
      * @param radius Radius of the object in meters (resized using config::render::scale)
      * @param pos Initial position of the object (array containing 3 elements {x, y, z})
      * @param color Color of the object
+     * @param renderRadius Radius to render for the object (in "opengl" units)
      */
-    Object(const double mass, const double radius, float pos[3], glm::vec3 color): mass(mass), radius(radius), x(pos[0]), y(pos[1]), z(pos[2]) {
+    Object(const double mass, const double radius, double pos[3], glm::vec3 color, const double renderRadius):
+    mass(mass), radius(radius), x(pos[0]), y(pos[1]), z(pos[2]), renderRadius(renderRadius) {
         computeVerticesAndIndices(color);
     }
 
     /**
      * Initializes an object using the information from the celestial body
      * @param celestialBody The celestial body to use to initialize the object
+     * @param renderRadius Radius to render for the object (in "opengl" units)
      */
-    Object(config::CelestialBody celestialBody) : mass(celestialBody.mass), radius(celestialBody.radius),
-    x(celestialBody.pos[0]), y(celestialBody.pos[1]), z(celestialBody.pos[2]) {
+    Object(config::CelestialBody celestialBody, const double renderRadius) : mass(celestialBody.mass), radius(celestialBody.radius),
+    x(celestialBody.pos[0]), y(celestialBody.pos[1]), z(celestialBody.pos[2]), renderRadius(renderRadius) {
         computeVerticesAndIndices(celestialBody.color);
     }
 
