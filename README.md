@@ -471,6 +471,7 @@ The force is super super strong, and the objects go directly out of sight. wth. 
 that's it...
 
 Uhhh, i had the wrong mass for the sun. I think it's because I had computed the mass i needed for having R_s = 5 back in the day
+
 O M G, that was it!! the orbit now semi works !! The earth goes through the sun though.
 I'll try removing the velocity component i gave in Z. For the scales, maybe i should have a scale that is per-object. Because to get the 
 correct orbit, we need the right radius, but with the right radius, we see nothing...
