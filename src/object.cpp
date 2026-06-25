@@ -24,9 +24,9 @@ void Object::computeVerticesAndIndices(glm::vec3 color) {
         for (int j = 0; j <= config::render::angular_resolution; j++) {
             float theta = static_cast<float>(i) / config::render::angular_resolution * numbers::pi * 2;
             float phi = static_cast<float>(j) / config::render::angular_resolution * numbers::pi * 2;
-            float xp = renderX + renderRadius * cos(phi) * cos(theta);
-            float yp = renderY + renderRadius * cos(phi) * sin(theta);
-            float zp = renderZ + renderRadius * sin(phi);
+            float xp = renderRadius * cos(phi) * cos(theta);
+            float yp = renderRadius * cos(phi) * sin(theta);
+            float zp = renderRadius * sin(phi);
             vertices.push_back(xp);
             vertices.push_back(yp);
             vertices.push_back(zp);

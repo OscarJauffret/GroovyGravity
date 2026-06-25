@@ -499,3 +499,74 @@ Ok, i'm not crazy
 ![image](img/2026-06-25_I_am_not_crazy.jpg)
 When I run the same code multiple times, sometimes it produces NaNs, and sometimes not. This is an interesting behavior,
 and I cannot wait to debug it tomorrow 🥸 🤡
+
+Yeah ok wtf, i tried like 5 times in a row and it worked fine, and then I removed a print and now it doesn't work anymore
+![image](img/2026-06-25_cunk.jpg)
+why does everything change depending on if there are prints or not
+
+I think it's a cleaning issue, let's just compile this code with commands
+
+When i compile it like this:
+```
+rm -rf build && cmake -S . -B build && cmake --build build --target GroovyGravity; 
+./build/GroovyGravity
+```
+
+it doesn't work. There were values, but a gray screen. Then i added this
+```
+set(COMPILER_FLAGS -O3 -march=native)
+target_compile_options(${PROJECT_NAME} PRIVATE ${COMPILER_FLAGS})
+```
+to the CMake, and now there are NaNs everywhere. Ok, I added a clean step before the build step in CLion' play button. Maybe it'll work.
+I don't understand why compiling it manually produces NaNs, and it's a shame too, because usually Clion is much slower.
+
+This is just great: if you compile with `-fsanitize=address,undefined`, it doesn't go to NaNs anymore, but when you remvoe the flag
+it goes to NaN.
+
+If I add this 
+```
+if (std::isinf(f2) || std::isnan(f2)) {
+    std::cout << "CRITICAL ERROR: Distance was " << r << ", Mass1: " << mass1 << ", Mass2: " << mass2 << std::endl;
+    exit(1);
+}
+```
+right after the computation of `f`, it exits. But if I add it after having printed `f`, then it doesn't exit. Whattttt
+
+Ok... I removed the `inline` keyword for the orbit function, and not it works with this command:
+```
+rm -rf build && cmake -S . -B build && cmake --build build --target GroovyGravity -j && ./build/GroovyGravity;
+```
+
+But for some reason, the camera is super slow again, and it is not looking at the system when spawning. Cool now i changed the 
+speed of the camera, and the distances are infinite again..... This will never end
+
+I suspect that doing `rm -rf build && cmake -S . -B build` doesn't delete the build dir
+
+For some reason I had a stale double loop in main that i now removed. It doesn't help with the Earth being eaten by the sun but w/e
+
+I mean look at this
+![image](img/2026-06-26_overlapping.png)
+The two objects are clearly overlapping, but the sun's x position is allegedly close to zero, while the earth's is -146.
+The positions are printed with this code: 
+```
+cout <<  "Sun x: " << scaleDistanceForRender(sun.getX()) <<  "y: "  << scaleDistanceForRender(sun.getY()) << " z: " <<scaleDistanceForRender(sun.getZ()) << endl;
+cout <<  "Earth x: " << scaleDistanceForRender(earth.getX()) <<  "y: "  << scaleDistanceForRender(earth.getY()) << " z: " <<scaleDistanceForRender(earth.getZ()) << endl;
+```
+So that should correspond to what is sent to the shader. I tried fixing it by just using the model matrix but it doesn't work... The model matrix
+is supposed to be used to translate objects, rotate and scale them, so i thought that it would be the perfect thing, but no.
+
+THERE WE GO, IT WORKS!!! we had to remove the offset here 
+```
+float xp = renderX + renderRadius * cos(phi) * cos(theta);
+float yp = renderY + renderRadius * cos(phi) * sin(theta);
+float zp = renderZ + renderRadius * sin(phi);
+```
+had to be changed to 
+```
+float xp = renderRadius * cos(phi) * cos(theta);
+float yp = renderRadius * cos(phi) * sin(theta);
+float zp = renderRadius * sin(phi);
+```
+because now the offsets are handled by the code of course...
+
+![image](img/2026-06-26_orbit.gif)

@@ -4,12 +4,13 @@
 
 #ifndef GROOVYGRAVITY_CONFIG_HPP
 #define GROOVYGRAVITY_CONFIG_HPP
+#include <glm/vec3.hpp>
 
 namespace config {
 
     namespace render {
         constexpr int angular_resolution = 20;      // How many vertices are used to make a circle (this is used to make spheres)
-        constexpr double distanceScale = 1.0f / 1000000000;    // How much to scale the distances by for rendering
+        constexpr double distanceScale = 1.0 / 1000000000;    // How much to scale the distances by for rendering
 
     }
 
@@ -19,7 +20,7 @@ namespace config {
     }
 
     namespace physics {
-        constexpr double dt = 2500;       // timestep (used to compute next orbit step)
+        constexpr double dt = 40000;       // timestep (used to compute next orbit step)
         constexpr double G = 6.6743e-11;    // Universal gravitational constant
         constexpr double c = 299792458.0f;  // Speed of light in a vacuum
     }
@@ -27,13 +28,13 @@ namespace config {
     struct CelestialBody {
         const double mass;       // Mass in kg
         const double radius;     // Radius in m
-        float pos[3];           // Initial position in m with respect to the origin
+        double pos[3];           // Initial position in m with respect to the origin
         const glm::vec3 color;  // Color
     };
 
     struct CelestialBodies {
-        inline static const CelestialBody Sun {1.989e+30, 696000000.0f,{0.0f, 0.0f, 0.0f}, {252, 229, 112}};
-        inline static const CelestialBody Earth {5.9722e+24, 6371000.0f, {152.1e9f, 0.0f, 0.0f}, {192, 200, 255}};
+        inline static const CelestialBody Sun {1.989e+30, 696000000.0,{0.0, 0.0, 0.0}, {252, 229, 112}};
+        inline static const CelestialBody Earth {5.9722e+24, 6371000.0, {152.1e9, 0.0, 0.0}, {192, 200, 255}};
     };
 }
 

@@ -27,6 +27,7 @@ add_executable(${PROJECT_NAME}
         src/main.cpp
         src/object.cpp
         src/spaceTime.cpp
+        src/objectUtils.cpp
 )
 
 add_executable(test
@@ -71,3 +72,7 @@ endif ()
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
         SHADER_DIR="${PROJECT_SOURCE_DIR}/shaders")
+
+set(COMPILER_FLAGS -O3)
+target_compile_options(${PROJECT_NAME} PRIVATE -fsanitize=address -g)
+target_link_options(${PROJECT_NAME} PRIVATE -fsanitize=address -g)

@@ -2,6 +2,30 @@
 // Created by Oscar Jauffret on 17/06/2026.
 //
 
+#if defined(__ARM_NEON) || defined(__aarch64__)
+// For Apple Silicon / ARM64
+__attribute__((constructor)) static void __enable_ftz_daz(void) {
+    unsigned long long fpcr;
+    // Read the current Floating-Point Control Register
+    __asm__ __volatile__("mrs %0, fpcr" : "=r"(fpcr));
+
+    // Set Bit 24 (FZ - Flush-to-Zero)
+    // Set Bit 27 (FZ16 - Half-precision Flush-to-Zero if applicable)
+    fpcr |= (1ULL << 24);
+
+    // Write back to the register
+    __asm__ __volatile__("msr fpcr, %0" : : "r"(fpcr));
+}
+#elif defined(__x86_64__) || defined(_M_X64)
+// Fallback for Intel/AMD machines
+#include <xmmintrin.h>
+#include <pmmintrin.h>
+__attribute__((constructor)) static void __enable_ftz_daz(void) {
+    _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
+    _MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
+}
+#endif
+
 #include <graphics/window.hpp>
 #include <graphics/camera.hpp>
 #include <graphics/shader.hpp>
@@ -22,7 +46,7 @@ int main() {
     Shader objectShader((dir + "/object.vert").c_str(), (dir + "/common.frag").c_str());
     Shader spaceTimeShader((dir + "/spaceTime.vert").c_str(), (dir + "/common.frag").c_str());
 
-    Camera camera(glm::vec3(scaleDistanceForRender(config::CelestialBodies::Earth.pos[0]), 0.0f, 400.0f), 50.0f);
+    Camera camera(glm::vec3(scaleDistanceForRender(config::CelestialBodies::Earth.pos[0]), 0.0f, 150.0f), 1000.0f);
 
     // Mouse callback routed to the camera via the window user pointer.
     glfwSetWindowUserPointer(window.getHandle(), &camera);
@@ -33,11 +57,11 @@ int main() {
         });
 
     Object sun(config::CelestialBodies::Sun, 10);  // sun
-    Object earth(config::CelestialBodies::Earth, 5);
+    Object earth(config::CelestialBodies::Earth, 10);
 
     earth.setVz(29290);
-    earth.setVx(-150);
-    SpaceTime spaceTime(200, config::CelestialBodies::Earth.pos[0] * 2.5);
+    //earth.setVx(-150);
+    SpaceTime spaceTime(200, 10e9 * 2.5);
     float lastFrame = 0.0f;
     bool  rHeldLastFrame = false;
 
@@ -75,41 +99,49 @@ int main() {
 
         window.clear(0.1f, 0.1f, 0.12f, 1.0f);  // clears color + depth by default
 
-        for (int i = 0; i < 2; i++) {
-            for (int j = i; j < 2; j++) {
-                orbit(sun, earth, hsqSunEarth);
-                sun.update();
-                earth.update();
-                //cout << "Sun:\n" << sun << endl;
-                //cout << "Earth:\n" << earth << endl;
+        orbit(sun, earth, hsqSunEarth);
+        sun.update();
+        earth.update();
+        //cout << "Sun:\n" << sun << endl;
+        //cout << "Earth:\n" << earth << endl;
 
-                spaceTimeShader.use();
-                spaceTimeShader.setMat4("uModel", model);
-                spaceTimeShader.setMat4("uView", camera.getViewMatrix());
-                spaceTimeShader.setMat4("uProj", projection);
+        spaceTimeShader.use();
+        spaceTimeShader.setMat4("uModel", model);
+        spaceTimeShader.setMat4("uView", camera.getViewMatrix());
+        spaceTimeShader.setMat4("uProj", projection);
 
-                auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object& object, int id) {
-                    spaceTimeShader.setVec3("objects[" + std::to_string(id) + "]", glm::vec3(object.getMass(), scaleDistanceForRender(object.getX()), scaleDistanceForRender(object.getZ())));
-                };
-                sendObjectToSpaceTimeShader(sun, 0);
-                //spaceTime.draw();
+        auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object& object, int id) {
+            spaceTimeShader.setVec3("objects[" + std::to_string(id) + "]", glm::vec3(object.getMass(), scaleDistanceForRender(object.getX()), scaleDistanceForRender(object.getZ())));
+        };
+        sendObjectToSpaceTimeShader(sun, 0);
+        //spaceTime.draw();
 
-                auto sendObjectToObjectShader = [&objectShader](Object& object, int id) {
-                    objectShader.setVec3("objectPositions[" + std::to_string(id) + "]", glm::vec3(
-                        scaleDistanceForRender(object.getX()), scaleDistanceForRender(object.getY()), scaleDistanceForRender(object.getZ())));
-                };
-                objectShader.use();
-                objectShader.setMat4("uModel", model);
-                objectShader.setMat4("uView", camera.getViewMatrix());
-                objectShader.setMat4("uProj", projection);
-                sendObjectToObjectShader(sun, 0);
-                sendObjectToObjectShader(earth, 1);
+        objectShader.use();
+        objectShader.setMat4("uView", camera.getViewMatrix());
+        objectShader.setMat4("uProj", projection);
 
-                objectShader.setInt("objectIndex", 0);
-                sun.draw();
-                objectShader.setInt("objectIndex", 1);
-                earth.draw();
-            }}
+        glm::mat4 sunModel = glm::mat4(1.0f);
+
+        sunModel = glm::translate(sunModel, glm::vec3(
+            scaleDistanceForRender(sun.getX()),
+            scaleDistanceForRender(sun.getY()),
+            scaleDistanceForRender(sun.getZ())
+        ));
+        objectShader.setMat4("uModel", sunModel);
+
+        sun.draw();
+
+        glm::mat4 earthModel = glm::mat4(1.0f);
+
+        earthModel = glm::translate(earthModel, glm::vec3(
+            scaleDistanceForRender(earth.getX()),
+            scaleDistanceForRender(earth.getY()),
+            scaleDistanceForRender(earth.getZ())
+        ));
+        objectShader.setMat4("uModel", earthModel);
+
+        earth.draw();
+
 
         window.swapBuffers();
         window.pollEvents();
