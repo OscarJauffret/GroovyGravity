@@ -8,8 +8,14 @@
 #include <iostream>
 #include <vector>
 
+#include "config.hpp"
+
 using namespace std;
 
+/**
+ * Helper that checks if a color is in RGB but scaled to 255, and scales it to 1 if it is the case
+ * @param c the color to check and normalize
+ */
 inline void normalizeRGB(glm::vec3& c) {
     if ( c[0] > 1.0f ||  c[1] > 1.0f ||  c[2] > 1.0f) {
          c[0] /= 255;
@@ -18,7 +24,13 @@ inline void normalizeRGB(glm::vec3& c) {
     }
 }
 
-
+/**
+ * Helper to print a vector
+ * @tparam T The type of vector
+ * @param os The ostream
+ * @param v The vector to print
+ * @return The ostream
+ */
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v)
 {
@@ -30,6 +42,28 @@ ostream& operator<<(ostream& os, const vector<T>& v)
     }
     os << "]\n";
     return os;
+}
+
+/**
+ * Template function to scale down a value (used to scale down distances in the simulation)
+ * @tparam T The type of the value
+ * @param val The value
+ * @return The scaled down value
+ */
+template <typename T>
+T scaleDistanceForRender(T val) {
+    return config::render::distanceScale * val;
+}
+
+/**
+ * Template function to scale down a value (used to scale down radii in the simulation)
+ * @tparam T The type of the value
+ * @param val The value
+ * @return The scaled down value
+ */
+template <typename T>
+T scaleRadiusForRender(T val) {
+    return config::render::radiiScale * val;
 }
 
 #endif //GROOVYGRAVITY_UTILS_HPP

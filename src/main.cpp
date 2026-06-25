@@ -8,6 +8,7 @@
 #include "object.hpp"
 #include "config.hpp"
 #include "spaceTime.hpp"
+#include "objectUtils.hpp"
 
 int main() {
     Window window(config::window::width, config::window::height, "Groovy Gravity");
@@ -21,7 +22,7 @@ int main() {
     Shader objectShader((dir + "/object.vert").c_str(), (dir + "/common.frag").c_str());
     Shader spaceTimeShader((dir + "/spaceTime.vert").c_str(), (dir + "/common.frag").c_str());
 
-    Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+    Camera camera(glm::vec3(scaleDistanceForRender(config::CelestialBodies::Earth.pos[0]), 0.0f, 400.0f), 50.0f);
 
     // Mouse callback routed to the camera via the window user pointer.
     glfwSetWindowUserPointer(window.getHandle(), &camera);
@@ -31,14 +32,16 @@ int main() {
             cam->processMouse(x, y);
         });
 
-    float pos1[3] = {0.0f, 0.0f, 0.0f};
-    float pos2[3] = {pos1[0] + 20, pos1[1], pos1[2] + 10};
-    float sunMass =  3.36648e+21;   // Expressed in millions of kg
-    Object object0(sunMass, 5, pos1, {252, 229, 112});  // sun
-    Object object1(sunMass/2, 2.5, pos2, {192, 200, 255});
-    SpaceTime spaceTime(200, 200);
+    Object sun(config::CelestialBodies::Sun);  // sun
+    Object earth(config::CelestialBodies::Earth);
+
+    earth.setVz(29780);
+    earth.setVx(-150);
+    SpaceTime spaceTime(200, config::CelestialBodies::Earth.pos[0] * 2.5);
     float lastFrame = 0.0f;
     bool  rHeldLastFrame = false;
+
+    double hsqSunEarth = hsq(sun, earth);
 
     glm::mat4 model = glm::mat4(1.0f);
 
@@ -46,7 +49,7 @@ int main() {
         glm::radians(45.0f),
         static_cast<float>(config::window::width) / static_cast<float>(config::window::height),
         0.1f,
-        100.0f
+        1000.0f
     );
 
     while (!window.shouldClose()) {
@@ -72,25 +75,41 @@ int main() {
 
         window.clear(0.1f, 0.1f, 0.12f, 1.0f);  // clears color + depth by default
 
-        spaceTimeShader.use();
-        spaceTimeShader.setMat4("uModel", model);
-        spaceTimeShader.setMat4("uView", camera.getViewMatrix());
-        spaceTimeShader.setMat4("uProj", projection);
+        for (int i = 0; i < 2; i++) {
+            for (int j = i; j < 2; j++) {
+                orbit(sun, earth, hsqSunEarth);
+                sun.update();
+                earth.update();
+                //cout << "Sun:\n" << sun << endl;
+                //cout << "Earth:\n" << earth << endl;
 
-        auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object& object, int id) {
-            spaceTimeShader.setVec3("objects[" + std::to_string(id) + "]", glm::vec3(object.getMass(), object.getX(), object.getZ()));
-        };
-        sendObjectToSpaceTimeShader(object0, 0);
-        sendObjectToSpaceTimeShader(object1, 1);
-        spaceTime.draw();
+                spaceTimeShader.use();
+                spaceTimeShader.setMat4("uModel", model);
+                spaceTimeShader.setMat4("uView", camera.getViewMatrix());
+                spaceTimeShader.setMat4("uProj", projection);
 
-        objectShader.use();
-        objectShader.setMat4("uModel", model);
-        objectShader.setMat4("uView", camera.getViewMatrix());
-        objectShader.setMat4("uProj", projection);
+                auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object& object, int id) {
+                    spaceTimeShader.setVec3("objects[" + std::to_string(id) + "]", glm::vec3(object.getMass(), scaleDistanceForRender(object.getX()), scaleDistanceForRender(object.getZ())));
+                };
+                sendObjectToSpaceTimeShader(sun, 0);
+                //spaceTime.draw();
 
-        object0.draw();
-        object1.draw();
+                auto sendObjectToObjectShader = [&objectShader](Object& object, int id) {
+                    objectShader.setVec3("objectPositions[" + std::to_string(id) + "]", glm::vec3(
+                        scaleDistanceForRender(object.getX()), scaleDistanceForRender(object.getY()), scaleDistanceForRender(object.getZ())));
+                };
+                objectShader.use();
+                objectShader.setMat4("uModel", model);
+                objectShader.setMat4("uView", camera.getViewMatrix());
+                objectShader.setMat4("uProj", projection);
+                sendObjectToObjectShader(sun, 0);
+                sendObjectToObjectShader(earth, 1);
+
+                objectShader.setInt("objectIndex", 0);
+                sun.draw();
+                objectShader.setInt("objectIndex", 1);
+                earth.draw();
+            }}
 
         window.swapBuffers();
         window.pollEvents();

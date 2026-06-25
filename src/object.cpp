@@ -16,13 +16,18 @@ void Object::computeVerticesAndIndices(glm::vec3 color) {
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
 
+    double renderRadius = scaleRadiusForRender(radius);
+    double renderX = scaleDistanceForRender(x);
+    double renderY = scaleDistanceForRender(y);
+    double renderZ = scaleDistanceForRender(z);
+
     for (int i = 0; i <= config::render::angular_resolution; i++) {
         for (int j = 0; j <= config::render::angular_resolution; j++) {
             float theta = static_cast<float>(i) / config::render::angular_resolution * numbers::pi * 2;
-            float phi = static_cast<float>(j) / config::render::angular_resolution * config::pi * 2;
-            float xp = x + radius * cos(phi) * cos(theta);
-            float yp = y + radius * cos(phi) * sin(theta);
-            float zp = z + radius * sin(phi);
+            float phi = static_cast<float>(j) / config::render::angular_resolution * numbers::pi * 2;
+            float xp = renderX + renderRadius * cos(phi) * cos(theta);
+            float yp = renderY + renderRadius * cos(phi) * sin(theta);
+            float zp = renderZ + renderRadius * sin(phi);
             vertices.push_back(xp);
             vertices.push_back(yp);
             vertices.push_back(zp);
@@ -57,18 +62,57 @@ void Object::draw() {
     Drawable::draw();
 }
 
-float Object::getMass() const{
+double Object::getMass() const{
     return mass;
 }
 
-float Object::getX() const {
+double Object::getX() const {
     return x;
 }
 
-float Object::getY() const {
+double Object::getY() const {
     return y;
 }
 
-float Object::getZ() const {
+double Object::getZ() const {
     return z;
+}
+
+double Object::getVx() const {
+    return vx;
+}
+
+
+double Object::getVy() const {
+    return vy;
+}
+
+
+double Object::getVz() const {
+    return vz;
+}
+
+void Object::setX(double tx) { x = tx;}
+void Object::setY(double ty) { y = ty;}
+void Object::setZ(double tz) { z = tz;}
+void Object::setVx(double tvx) { vx = tvx;}
+void Object::setVy(double tvy) { vy = tvy;}
+void Object::setVz(double tvz) { vz = tvz;}
+
+void Object::update() {
+    setX(getX() + getVx() * config::physics::dt);
+    setY(getY() + getVy() * config::physics::dt);
+    setZ(getZ() + getVz() * config::physics::dt);
+}
+
+ostream& operator<<(ostream& os, Object const& o) {
+    os  << "---- Position ----" << endl
+        << "X (real): " << o.getX() << ", (sim): " << scaleDistanceForRender(o.getX()) << endl
+        << "Y (real): " << o.getY() << ", (sim): " << scaleDistanceForRender(o.getY()) << endl
+        << "Z (real): " << o.getZ() << ", (sim): " << scaleDistanceForRender(o.getZ()) << endl
+        << "---- Velocity ----" << endl
+        << "Vx (real): " << o.getVx() << ", (sim): " << scaleDistanceForRender(o.getVx()) << endl
+        << "Vy (real): " << o.getVy() << ", (sim): " << scaleDistanceForRender(o.getVy()) << endl
+        << "Vz (real): " << o.getVz() << ", (sim): " << scaleDistanceForRender(o.getVz()) << endl;
+    return os;
 }

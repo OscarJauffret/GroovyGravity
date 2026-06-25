@@ -6,10 +6,14 @@ uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProj;
 
+uniform vec3 objectPositions[2];
+uniform int objectIndex;
+
 out vec3 vColor;
 
 void main() {
-    //vec3 objectPos = vec3(object[0], object[1], object[2]);
-    gl_Position = uProj * uView * uModel * vec4(aPos[0], aPos[1], aPos[2], 1.0);
+    vec3 currentObjectPos = objectPositions[objectIndex];
+    vec3 finalPos = aPos + currentObjectPos;
+    gl_Position = uProj * uView * uModel * vec4(finalPos, 1.0);
     vColor = objectColor;
 }

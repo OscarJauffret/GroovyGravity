@@ -17,6 +17,14 @@ protected:
     unsigned int VAO, VBO, EBO;
     unsigned int indexCount;
 
+    /**
+     * Takes a vector of vertices and a vector of indices and sets them up for openGL to use. The function initializes
+     * buffers to store the arrays, and puts them into locations that are accessible for shaders.
+     *
+     * The function expects that each vertex has 6 components: 3 posistions (x, y, z) and then 3 for color
+     * @param vertices Vector of vertices to set up in a VertexArray
+     * @param indices Vector of indices to use with the vertices
+     */
     void setup(const std::vector<float>& vertices, const std::vector<unsigned int>& indices) {
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -42,15 +50,20 @@ protected:
         glEnableVertexAttribArray(1);
 
         glBindVertexArray(0);
-        cout << "Set up" << endl;
     }
 
 public:
+    /**
+     * Bind the vertex array to start using it
+     */
     virtual void draw() {
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
     }
 
+    /**
+     * Cleans the memory
+     */
     ~Drawable() {
         glDeleteVertexArrays(1, &VAO);
         glDeleteBuffers(1, &VBO);

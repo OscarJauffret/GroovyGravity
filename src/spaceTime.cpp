@@ -4,16 +4,18 @@
 
 #include "spaceTime.hpp"
 
-SpaceTime::SpaceTime(int resolution, float size, glm::vec3 color) {
+SpaceTime::SpaceTime(int resolution, double size, glm::vec3 color) {
     normalizeRGB(color);
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
 
+    float renderSize = scaleDistanceForRender(size);
+
     // 1. Generate Vertices
     for (int i = 0; i <= resolution; i++) {
         for (int j = 0; j <= resolution; j++) {
-            float x = (float)i / (float)resolution * size - size/2.0f;
-            float z = (float)j / (float)resolution * size - size/2.0f;
+            float x = (float)i / (float)resolution * renderSize - renderSize/2.0f;
+            float z = (float)j / (float)resolution * renderSize - renderSize/2.0f;
 
             vertices.push_back(x);      // X
             vertices.push_back(0.0f); // Y
