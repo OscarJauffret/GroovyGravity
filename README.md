@@ -476,3 +476,6 @@ I'll try removing the velocity component i gave in Z. For the scales, maybe i sh
 correct orbit, we need the right radius, but with the right radius, we see nothing...
 
 Ok, if i give zero velocity in `x`, everything becomes a NaN immediately, i'll keep a small velocity component for now.
+
+I'll push for now, this is good already
+![gif](img/2026-06-25_first_orbit.gif)
