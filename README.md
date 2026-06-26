@@ -570,3 +570,24 @@ float zp = renderRadius * sin(phi);
 because now the offsets are handled by the code of course...
 
 ![image](img/2026-06-26_orbit.gif)
+
+## 26/06
+Today, I would like to work on the camera system. I would like to modify it: instead of moving with WASD, i'd like to
+be able to click on an object, have it always be the center of the camera, be able to move around that center with the mouse,
+and scroll to zoom/unzoom. And you should be able to click on another object to change the view to that object.
+
+I don't know how to do it though. I guess maybe i can start with trying to have the camera look at a certain position all the time.
+Maybe [this](https://learnopengl.com/Getting-started/Camera) can help me. Definitely helps a lot. I think what we want is to
+be at a given distance from the object we are looking at. So basically, we know the target, and we compute the camera's position from it.
+For example, the position could be 50 units higher, and 50 units out from the radius if that makes sense.
+Essentially, the only thing we need to specify is the distance indeed, and then, with the mouse, we can control where we are on the
+sphere that has a radius the size of the distance.
+
+For now, i'll just set a default distance and position on the radius.
+
+Cool, the fixed camera seems to work now. I only need to add the panning with the mouse/trackpad, and the scrolling to zoom/dezoom. 
+Also the change of target with the click, but that's last, because i suspect it'll be more complicated.
+
+I was a bit confused at firts, but everything is working: here i set the camera to track earth, and it looks like the sun is orbiting,
+but that's normal, we just changed the reference
+![gif](img/2026-06-26_camera_centered_on_earth.gif)

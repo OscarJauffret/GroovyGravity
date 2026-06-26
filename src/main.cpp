@@ -27,7 +27,7 @@ __attribute__((constructor)) static void __enable_ftz_daz(void) {
 #endif
 
 #include <graphics/window.hpp>
-#include <graphics/camera.hpp>
+#include <graphics/fixedCamera.hpp>
 #include <graphics/shader.hpp>
 #include "object.hpp"
 #include "config.hpp"
@@ -46,15 +46,15 @@ int main() {
     Shader objectShader((dir + "/object.vert").c_str(), (dir + "/common.frag").c_str());
     Shader spaceTimeShader((dir + "/spaceTime.vert").c_str(), (dir + "/common.frag").c_str());
 
-    Camera camera(glm::vec3(scaleDistanceForRender(config::CelestialBodies::Earth.pos[0]), 0.0f, 150.0f), 1000.0f);
-
-    // Mouse callback routed to the camera via the window user pointer.
-    glfwSetWindowUserPointer(window.getHandle(), &camera);
-    glfwSetCursorPosCallback(window.getHandle(),
-        [](GLFWwindow* w, double x, double y) {
-            auto* cam = static_cast<Camera*>(glfwGetWindowUserPointer(w));
-            cam->processMouse(x, y);
-        });
+    FixedCamera camera(300, glm::vec3(0.0f, 0.0f, 0.0f), numbers::pi/4);
+    //
+    // // Mouse callback routed to the camera via the window user pointer.
+    // glfwSetWindowUserPointer(window.getHandle(), &camera);
+    // glfwSetCursorPosCallback(window.getHandle(),
+    //     [](GLFWwindow* w, double x, double y) {
+    //         auto* cam = static_cast<FlyByCamera*>(glfwGetWindowUserPointer(w));
+    //         cam->processMouse(x, y);
+    //     });
 
     Object sun(config::CelestialBodies::Sun, 10);  // sun
     Object earth(config::CelestialBodies::Earth, 10);
@@ -80,14 +80,14 @@ int main() {
         float now = static_cast<float>(glfwGetTime());
         float dt  = now - lastFrame;
         lastFrame = now;
-
+        //
         GLFWwindow* h = window.getHandle();
-        if (glfwGetKey(h, GLFW_KEY_W) == GLFW_PRESS) camera.moveForward(dt);
-        if (glfwGetKey(h, GLFW_KEY_S) == GLFW_PRESS) camera.moveBackward(dt);
-        if (glfwGetKey(h, GLFW_KEY_A) == GLFW_PRESS) camera.moveLeft(dt);
-        if (glfwGetKey(h, GLFW_KEY_D) == GLFW_PRESS) camera.moveRight(dt);
-        if (glfwGetKey(h, GLFW_KEY_SPACE) == GLFW_PRESS) camera.moveUp(dt);
-        //if (glfwGetKey(h, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) camera.moveDown(dt);
+        // if (glfwGetKey(h, GLFW_KEY_W) == GLFW_PRESS) camera.moveForward(dt);
+        // if (glfwGetKey(h, GLFW_KEY_S) == GLFW_PRESS) camera.moveBackward(dt);
+        // if (glfwGetKey(h, GLFW_KEY_A) == GLFW_PRESS) camera.moveLeft(dt);
+        // if (glfwGetKey(h, GLFW_KEY_D) == GLFW_PRESS) camera.moveRight(dt);
+        // if (glfwGetKey(h, GLFW_KEY_SPACE) == GLFW_PRESS) camera.moveUp(dt);
+        // //if (glfwGetKey(h, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) camera.moveDown(dt);
 
         // Hot-reload on a rising edge of R, so it fires once per press.
         bool rHeld = glfwGetKey(h, GLFW_KEY_R) == GLFW_PRESS;
@@ -105,9 +105,11 @@ int main() {
         //cout << "Sun:\n" << sun << endl;
         //cout << "Earth:\n" << earth << endl;
 
+
         spaceTimeShader.use();
         spaceTimeShader.setMat4("uModel", model);
-        spaceTimeShader.setMat4("uView", camera.getViewMatrix());
+        glm::vec3 camPos = glm::vec3(scaleDistanceForRender(earth.getX()), scaleDistanceForRender(earth.getY()), scaleDistanceForRender(earth.getZ()));
+        spaceTimeShader.setMat4("uView", camera.getViewMatrix(camPos));
         spaceTimeShader.setMat4("uProj", projection);
 
         auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object& object, int id) {
@@ -117,7 +119,7 @@ int main() {
         //spaceTime.draw();
 
         objectShader.use();
-        objectShader.setMat4("uView", camera.getViewMatrix());
+        objectShader.setMat4("uView", camera.getViewMatrix(camPos));
         objectShader.setMat4("uProj", projection);
 
         glm::mat4 sunModel = glm::mat4(1.0f);
