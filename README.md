@@ -591,6 +591,6 @@ then i just convert them back to xyz for the `glm::vec3`
 Cool, the fixed camera seems to work now. I only need to add the panning with the mouse/trackpad, and the scrolling to zoom/dezoom. 
 Also the change of target with the click, but that's last, because i suspect it'll be more complicated.
 
-I was a bit confused at firts, but everything is working: here i set the camera to track earth, and it looks like the sun is orbiting,
+I was a bit confused at first, but everything is working: here i set the camera to track earth, and it looks like the sun is orbiting,
 but that's normal, we just changed the reference
 ![gif](img/2026-06-26_camera_centered_on_earth.gif)
