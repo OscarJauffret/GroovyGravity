@@ -594,3 +594,7 @@ Also the change of target with the click, but that's last, because i suspect it'
 I was a bit confused at first, but everything is working: here i set the camera to track earth, and it looks like the sun is orbiting,
 but that's normal, we just changed the reference
 ![gif](img/2026-06-26_camera_centered_on_earth.gif)
+
+Great, now the camera panning works, and we just have to add the scrolling to basically just change the distance.
+
+Cool, zooming works. Since there are almost zero references I get lost quite easily with the camera but that's another problem.
