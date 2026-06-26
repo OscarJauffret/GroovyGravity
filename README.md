@@ -577,7 +577,9 @@ be able to click on an object, have it always be the center of the camera, be ab
 and scroll to zoom/unzoom. And you should be able to click on another object to change the view to that object.
 
 I don't know how to do it though. I guess maybe i can start with trying to have the camera look at a certain position all the time.
-Maybe [this](https://learnopengl.com/Getting-started/Camera) can help me. Definitely helps a lot. I think what we want is to
+Maybe [this](https://learnopengl.com/Getting-started/Camera) can help me.
+
+Definitely helps a lot. I think what we want is to
 be at a given distance from the object we are looking at. So basically, we know the target, and we compute the camera's position from it.
 For example, the position could be 50 units higher, and 50 units out from the radius if that makes sense.
 Essentially, the only thing we need to specify is the distance indeed, and then, with the mouse, we can control where we are on the
