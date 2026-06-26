@@ -585,7 +585,8 @@ For example, the position could be 50 units higher, and 50 units out from the ra
 Essentially, the only thing we need to specify is the distance indeed, and then, with the mouse, we can control where we are on the
 sphere that has a radius the size of the distance.
 
-For now, i'll just set a default distance and position on the radius.
+For now, i'll just set a default distance and position on the radius. I just need to add 2 angles to get spherical coordinates, and
+then i just convert them back to xyz for the `glm::vec3`
 
 Cool, the fixed camera seems to work now. I only need to add the panning with the mouse/trackpad, and the scrolling to zoom/dezoom. 
 Also the change of target with the click, but that's last, because i suspect it'll be more complicated.
