@@ -16,6 +16,20 @@
  */
 void orbit(Object& o1, Object& o2, double hsq);
 
+/**
+ * Compute the square of the angular momentum. This propertys is conserved, so it suffices to compute it once per object pair
+ * @param o1 First object
+ * @param o2 Second object
+ * @return The square of the angular momentum
+ */
 double hsq(Object& o1, Object& o2);
+
+/**
+ * Helper to get the center of an object as a glm vector
+ * @param o the object
+ * @param scaledToRender a boolean indicating wheter the result should be returned in "render coordinates" or in "real coordinates"
+ * @return the center of the object as a glm vector
+ */
+glm::vec3 center(Object& o, bool scaledToRender = true);
 
 #endif //GROOVYGRAVITY_OBJECTUTILS_HPP

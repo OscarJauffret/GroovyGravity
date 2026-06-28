@@ -123,28 +123,21 @@ int main() {
         objectShader.setMat4("uView", camera.getViewMatrix(camPos));
         objectShader.setMat4("uProj", projection);
 
-        glm::mat4 sunModel = glm::mat4(1.0f);
-
-        sunModel = glm::translate(sunModel, glm::vec3(
-            scaleDistanceForRender(sun.getX()),
-            scaleDistanceForRender(sun.getY()),
-            scaleDistanceForRender(sun.getZ())
+        auto sendObjectToObjectShader = [&objectShader](Object& obj, glm::vec3 sunPosition, bool lightSource = false) {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(
+            scaleDistanceForRender(obj.getX()),
+            scaleDistanceForRender(obj.getY()),
+            scaleDistanceForRender(obj.getZ())
         ));
-        objectShader.setMat4("uModel", sunModel);
-
+            objectShader.setMat4("uModel", model);
+            objectShader.setBool("lightSource", lightSource);
+            objectShader.setVec3("sunPosition", sunPosition);
+        };
+        sendObjectToObjectShader(sun, center(sun), true);
         sun.draw();
-
-        glm::mat4 earthModel = glm::mat4(1.0f);
-
-        earthModel = glm::translate(earthModel, glm::vec3(
-            scaleDistanceForRender(earth.getX()),
-            scaleDistanceForRender(earth.getY()),
-            scaleDistanceForRender(earth.getZ())
-        ));
-        objectShader.setMat4("uModel", earthModel);
-
+        sendObjectToObjectShader(earth, center(sun));
         earth.draw();
-
 
         window.swapBuffers();
         window.pollEvents();

@@ -9,6 +9,8 @@ uniform mat4 uProj;
 uniform vec3 objects[1];    // x: mass, y: x, z: z
 
 out vec3 vColor;
+out vec3 vNormal;
+out vec3 vPos;
 
 void main() {;
     // z(x, y) = 2 \sqrt{r_S(\sqrt{x^2 + y^2} - r_S)}
@@ -38,4 +40,6 @@ void main() {;
     vec3 finalPos = pos0 + offset;
     gl_Position = uProj * uView * uModel * vec4(finalPos, 1.0);
     vColor = spaceTimeColor;
+    vNormal = vec3(0.0, 1.0, 0.0);
+    vPos = vec3(gl_Position.x, gl_Position.y, gl_Position.z);
 }

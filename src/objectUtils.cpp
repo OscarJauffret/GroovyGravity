@@ -4,13 +4,6 @@
 
 #include "objectUtils.hpp"
 
-/**
- * This function makes o1 and o2 orbit around each other. It updates the velocities of the objects
- * @param o1 First object
- * @param o2 Second object
- * @param hsq the square of the angular momentum. Since there is angular momentum conservation, we can compute this once and
- * reuse it
- */
 void orbit(Object& o1, Object& o2, double hsq) {
     double dx = o2.getX() - o1.getX();
     double dy = o2.getY() - o1.getY();
@@ -57,4 +50,16 @@ double hsq(Object& o1, Object& o2) {
     double hz = (dx * dvy) - (dy * dvx);
 
     return hx * hx + hy * hy + hz * hz;
+}
+
+glm::vec3 center(Object& o, bool scaledToRender) {
+    double x = o.getX();
+    double y = o.getY();
+    double z = o.getZ();
+    if (scaledToRender) {
+        x = scaleDistanceForRender(x);
+        y = scaleDistanceForRender(y);
+        z = scaleDistanceForRender(z);
+    }
+    return glm::vec3(x, y, z);
 }

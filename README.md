@@ -598,3 +598,42 @@ but that's normal, we just changed the reference
 Great, now the camera panning works, and we just have to add the scrolling to basically just change the distance.
 
 Cool, zooming works. Since there are almost zero references I get lost quite easily with the camera but that's another problem.
+
+## 28/06
+Hello, now I would like to add a couple of shaders, as in for example light coming in from the sun and hitting the objects 
+on the surface that is closest to the sun. I imagine that to do that, i would need to compute the normal of the surface
+of the object at each vertex, and compute the vector from the object that points to the sun, and if the dot product is positive,
+then I color it with a bright color, and the color is brighter, the greater the cross product.
+
+So, first, we need to compute the normals of the sphere at each vertex. It's simple because for a sphere, it's just the 
+vector from the center of the sphere to the vertex. I also need to add a boolean flag to indicate that some objects are
+light sources, so it wouldn't make sense to change their tint.
+
+Alright, there is something wrong, the earth is completely dark
+![image](img/2026-06-28_earth_completely_dark.png)
+it doesn't seem to be the uniform center's fault because when i replace it with {0, 0, 0}, it still is dark.
+Could be the way how we compute the normal, but then it means that it's the gl_Position's fault.
+
+Ahh, wait, I know, we never give the sunPosition to the fragment shader. Hm, ok, that didn't solve it.
+
+Apparently, the tint is always 0.0. Maybe we need to normalize the normal vectors.
+
+Hmm, the problem looks like it's in the dot product, according to my tests. The dot product is always zero,
+which indicates that maybe the vNormal is zero all the time. Ok, so it's actually vNormal that is zero, because when we use this
+```
+if (length(vNormal) < 1e-3) {
+    color = vec3(1.0, 0.0, 0.0);
+}
+```
+the objects render red.
+
+Ok, it kinda works. The thing is I was using the world coordinates for the vertex position, but we don't need to do that, 
+because the spheres are already centered around {0, 0, 0}, and the model matrix is moving them. So, the normal vector is just
+the original position of the vertex. But it doesn't look super good, because i feel like the light is not always facing the sun.
+
+Like here for example,
+![image](img/2026-06-28_light_broken.png)
+We don't even see the light
+
+Ahh, perfect, now it works. the problem was that I had the vPos and the normal in model space, but the lightSource that
+I passed to the fragment shader was in world space.
