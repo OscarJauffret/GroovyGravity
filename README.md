@@ -637,3 +637,5 @@ We don't even see the light
 
 Ahh, perfect, now it works. the problem was that I had the vPos and the normal in model space, but the lightSource that
 I passed to the fragment shader was in world space.
+
+I changed the resolution to 50 for the spheres, it looks much better 🤩
