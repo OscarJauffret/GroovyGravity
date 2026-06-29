@@ -114,7 +114,6 @@ int main() {
 
         auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object& obj) {
             double rs = 2 * config::physics::G * obj.getMass() / (config::physics::c * config::physics::c);
-            cout << "rs: " << rs << endl;
             spaceTimeShader.setFloat("rs", 5);
             spaceTimeShader.setVec2("objectPos", glm::vec2(scaleDistanceForRender(obj.getX()), scaleDistanceForRender(obj.getY())));
         };
