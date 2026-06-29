@@ -27,7 +27,7 @@ public:
     /**
      * Draws the mesh on the screen
      */
-    void draw() override;
+    void draw() const override;
 };
 
 

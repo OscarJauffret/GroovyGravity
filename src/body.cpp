@@ -2,7 +2,7 @@
 // Created by Oscar Jauffret on 17/06/2026.
 //
 
-#include "celestialBody.hpp"
+#include "body.hpp"
 #include <vector>
 
 #include "config.hpp"
@@ -11,14 +11,10 @@
 
 using namespace std;
 
-void CelestialBody::computeVerticesAndIndices(glm::vec3 color) {
+void Body::computeVerticesAndIndices(glm::vec3 color) {
     normalizeRGB(color);
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
-
-    double renderX = scaleDistanceForRender(x);
-    double renderY = scaleDistanceForRender(y);
-    double renderZ = scaleDistanceForRender(z);
 
     for (int i = 0; i <= config::render::angular_resolution; i++) {
         for (int j = 0; j <= config::render::angular_resolution; j++) {
@@ -56,40 +52,32 @@ void CelestialBody::computeVerticesAndIndices(glm::vec3 color) {
     setup(vertices, indices);
 }
 
-void CelestialBody::draw() {
+void Body::draw() const {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     Drawable::draw();
 }
 
-double CelestialBody::getMass() const { return mass; }
-double CelestialBody::getX() const { return x; }
-double CelestialBody::getY() const { return y; }
-double CelestialBody::getZ() const { return z; }
-double CelestialBody::getVx() const { return vx; }
-double CelestialBody::getVy() const { return vy; }
-double CelestialBody::getVz() const { return vz; }
+BodyType Body::getType() const { return type; }
+double Body::getMass() const { return mass; }
+glm::dvec3 Body::getPos() const { return pos; }
+glm::dvec3 Body::getVel() const { return vel; }
 
-void CelestialBody::setX(double tx) { x = tx; }
-void CelestialBody::setY(double ty) { y = ty; }
-void CelestialBody::setZ(double tz) { z = tz; }
-void CelestialBody::setVx(double tvx) { vx = tvx; }
-void CelestialBody::setVy(double tvy) { vy = tvy; }
-void CelestialBody::setVz(double tvz) { vz = tvz; }
+void Body::setPos(glm::dvec3 pos) { this->pos = pos; }
+void Body::setVel(glm::dvec3 vel) { this->vel = vel; }
 
-void CelestialBody::update() {
-    setX(getX() + getVx() * config::physics::dt);
-    setY(getY() + getVy() * config::physics::dt);
-    setZ(getZ() + getVz() * config::physics::dt);
+
+void Body::update() {
+    pos += vel * config::physics::dt;
 }
 
-ostream& operator<<(ostream& os, CelestialBody const& b) {
+ostream& operator<<(ostream& os, Body const& b) {
     os  << "---- Position ----" << endl
-        << "X (real): " << b.getX() << ", (sim): " << scaleDistanceForRender(b.getX()) << endl
-        << "Y (real): " << b.getY() << ", (sim): " << scaleDistanceForRender(b.getY()) << endl
-        << "Z (real): " << b.getZ() << ", (sim): " << scaleDistanceForRender(b.getZ()) << endl
+        << "X (real): " << b.getPos().x << ", (sim): " << scaleDistanceForRender(b.getPos().x) << endl
+        << "Y (real): " << b.getPos().y << ", (sim): " << scaleDistanceForRender(b.getPos().y) << endl
+        << "Z (real): " << b.getPos().z << ", (sim): " << scaleDistanceForRender(b.getPos().z) << endl
         << "---- Velocity ----" << endl
-        << "Vx (real): " << b.getVx() << ", (sim): " << scaleDistanceForRender(b.getVx()) << endl
-        << "Vy (real): " << b.getVy() << ", (sim): " << scaleDistanceForRender(b.getVy()) << endl
-        << "Vz (real): " << b.getVz() << ", (sim): " << scaleDistanceForRender(b.getVz()) << endl;
+        << "Vx (real): " << b.getVel().x << ", (sim): " << scaleDistanceForRender(b.getVel().x) << endl
+        << "Vy (real): " << b.getVel().y << ", (sim): " << scaleDistanceForRender(b.getVel().y) << endl
+        << "Vz (real): " << b.getVel().z << ", (sim): " << scaleDistanceForRender(b.getVel().z) << endl;
     return os;
 }

@@ -56,7 +56,7 @@ public:
     /**
      * Bind the vertex array to start using it
      */
-    virtual void draw() {
+    virtual void draw() const {
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
     }

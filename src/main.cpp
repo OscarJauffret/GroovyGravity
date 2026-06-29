@@ -2,6 +2,7 @@
 // Created by Oscar Jauffret on 17/06/2026.
 //
 
+#include "universeRenderer.hpp"
 #if defined(__ARM_NEON) || defined(__aarch64__)
 // For Apple Silicon / ARM64
 __attribute__((constructor)) static void __enable_ftz_daz(void) {
@@ -29,10 +30,12 @@ __attribute__((constructor)) static void __enable_ftz_daz(void) {
 #include <graphics/window.hpp>
 #include <graphics/fixedCamera.hpp>
 #include <graphics/shader.hpp>
-#include "celestialBody.hpp"
+#include "body.hpp"
 #include "config.hpp"
 #include "spaceTime.hpp"
-#include "objectUtils.hpp"
+#include "bodyUtils.hpp"
+#include "universe.hpp"
+#include "presets.hpp"
 
 int main() {
     Window window(config::window::width, config::window::height, "Groovy Gravity");
@@ -40,10 +43,6 @@ int main() {
     glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glEnable(GL_DEPTH_TEST);
-
-    std::string dir = SHADER_DIR;
-    Shader celestialBodyShader((dir + "/celestialBody.vert").c_str(), (dir + "/celestialBody.frag").c_str());
-    Shader spaceTimeShader((dir + "/spaceTime.vert").c_str(), (dir + "/spaceTime.frag").c_str());
 
     FixedCamera camera(300, glm::vec3(0.0f, 0.0f, 0.0f), numbers::pi/4);
 
@@ -66,17 +65,15 @@ int main() {
             cam->setDistance(d);
     });
 
-    CelestialBody sun(config::CelestialBodies::Sun, 10);
-    CelestialBody earth(config::CelestialBodies::Earth, 10);
+    Universe universe;
+    universe.addBody(presets::Sun(20.0));
+    universe.addBody(presets::Earth(5.0));
 
-    earth.setVz(29290);
+    UniverseRenderer universeRenderer(SHADER_DIR);
+
     SpaceTime spaceTime(200, 152e9 * 2.5);
     float lastFrame = 0.0f;
     bool  rHeldLastFrame = false;
-
-    double hsqSunEarth = hsq(sun, earth);
-
-    glm::mat4 model = glm::mat4(1.0f);
 
     glm::mat4 projection = glm::perspective(
         glm::radians(45.0f),
@@ -93,50 +90,15 @@ int main() {
 
         bool rHeld = glfwGetKey(h, GLFW_KEY_R) == GLFW_PRESS;
         if (rHeld && !rHeldLastFrame) {
-            spaceTimeShader.reload();
-            celestialBodyShader.reload();
+            universeRenderer.reloadShaders();
         }
         rHeldLastFrame = rHeld;
 
         window.clear(0.1f, 0.1f, 0.12f, 1.0f);  // clears color + depth by default
 
-        orbit(sun, earth, hsqSunEarth);
-        sun.update();
-        earth.update();
+        //universe.update();
+        universeRenderer.render(universe, camera, projection, spaceTime);
 
-        spaceTimeShader.use();
-        spaceTimeShader.setMat4("uModel", model);
-        glm::vec3 camPos = glm::vec3(scaleDistanceForRender(sun.getX()), scaleDistanceForRender(sun.getY()), scaleDistanceForRender(sun.getZ()));
-        spaceTimeShader.setMat4("uView", camera.getViewMatrix(camPos));
-        spaceTimeShader.setMat4("uProj", projection);
-
-        auto sendObjectToSpaceTimeShader = [&spaceTimeShader](CelestialBody& body) {
-            double rs = 2 * config::physics::G * body.getMass() / (config::physics::c * config::physics::c);
-            spaceTimeShader.setFloat("rs", 5);  //TODO: figure out what to do with rs
-            spaceTimeShader.setVec2("objectPos", glm::vec2(scaleDistanceForRender(body.getX()), scaleDistanceForRender(body.getY())));
-        };
-        sendObjectToSpaceTimeShader(sun);
-        //spaceTime.draw();
-
-        celestialBodyShader.use();
-        celestialBodyShader.setMat4("uView", camera.getViewMatrix(camPos));
-        celestialBodyShader.setMat4("uProj", projection);
-
-        auto sendObjectToCBShader = [&celestialBodyShader](CelestialBody& body, glm::vec3 sunPosition, bool lightSource = false) {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, glm::vec3(
-            scaleDistanceForRender(body.getX()),
-            scaleDistanceForRender(body.getY()),
-            scaleDistanceForRender(body.getZ())
-        ));
-            celestialBodyShader.setMat4("uModel", model);
-            celestialBodyShader.setBool("lightSource", lightSource);
-            celestialBodyShader.setVec3("sunPosition", sunPosition);
-        };
-        sendObjectToCBShader(sun, center(sun), true);
-        sun.draw();
-        sendObjectToCBShader(earth, center(sun));
-        earth.draw();
 
         window.swapBuffers();
         window.pollEvents();

@@ -25,9 +25,11 @@ endif ()
 # 3. Define the executable (assumes main.cpp is in the same folder)
 add_executable(${PROJECT_NAME}
         src/main.cpp
-        src/celestialBody.cpp
+        src/body.cpp
         src/spaceTime.cpp
-        src/objectUtils.cpp
+        src/bodyUtils.cpp
+        src/universe.cpp
+        src/universeRenderer.cpp
 )
 
 add_executable(test

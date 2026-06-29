@@ -47,7 +47,7 @@ SpaceTime::SpaceTime(int resolution, double size, glm::vec3 color) {
     setup(vertices, indices);
 }
 
-void SpaceTime::draw() {
+void SpaceTime::draw() const {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     Drawable::draw();
 }

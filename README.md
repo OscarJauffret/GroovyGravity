@@ -667,3 +667,103 @@ planets or stars, and that takes care of the updates. I guess this is also a goo
 Great, renaming was fairly easy with Clion, and i just needed to update the CMake. I'll also update the comments. 
 
 Alright, looks like everything's good for the rename now. 
+
+### Refactoring
+So, now, we want to have a class that will hold a vector of bodies, and that provides functions to compute all interactions,
+and update all bodies. We can call this class `Universe` I suppose.
+
+It's a bit longer to rewrite, and I'm also adding a `UniverseRenderer`, who takes care of the rendering. The thing is, I don't know
+how to still have access to the individual bodies, now that the Universe takes care of everything. I still need to know what is 
+the sun for example, because I need to give that information to the spaceTime shader.
+
+Maybe I should add a Type enum to the config::CelestialBody. It is also slightly confusing now that we have both the cpp object
+that is called CelestialBody, and the config struct. Maybe I need to change the config struct to `Body`. I also changed the
+way to initialize the position and velocity, and made it so it's possible to initialize the position relative to another object
+
+I am complicating things. Right now, we are using a config::Body to initialize a CelestialBody, by passing the values of 
+the Body and copying them into the values of the CelestialBody. I feel like there is a simpler way to do this... At some point
+I will also need to separate the physics state of CelestialBody from the Drawable class...
+
+[Time to refactor...](https://open.spotify.com/intl-fr/track/0H6rpW1xnJ8qRQwSrIADPE?si=e1d5daf8fe194333)
+
+What I'll do:
+- Unify the config::Body and CelestialBody class into a single one, that uses glm vectors for the position and velocity
+- Make a presets.hpp file that contains the definitions for the default planets and stars
+- Separate the drawing logic from the physics in the new unified class
+- With all these modifications, I'll be able to figure out how to properly use the UniverseRenderer class.
+
+Cool, it looks like i'm done with points 1, 2, and 4, but when I run the code, I get a very explicit error:
+`AddressSanitizer:DEADLYSIGNAL` (there is nothing else written)
+
+I think one problem could be that Universe holds a vector of Bodies, not a vector of references to bodies. And when I try to
+find the sun in UniverseRenderer, or when I send the objects to the shader, I use references. Could be that..
+
+I'm afraid I have to use the forbidden debugging technique
+```
+cout << "Yo 1" << endl;
+universe.update();
+cout << "Yo 2" << endl;
+universeRenderer.render(universe, camera, projection, spaceTime);
+cout << "Yo 3" << endl;
+```
+Good: 
+```
+AddressSanitizer:DEADLYSIGNAL
+Yo 1
+```
+So, I guess we know that the error is in universe.update() then? Here is the function:
+```
+void Universe::update() {
+    unsigned int n = bodies.size();
+    if (!validHsqMatrix) computeHsqMatrix();
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            orbit(bodies[i], bodies[j], hsqMatrix[i][j]);
+            bodies[i].update();
+            bodies[j].update();
+        }
+    }
+}
+```
+After some other print statements, it appears the error is in the computeHsqMatrix().
+```
+void Universe::computeHsqMatrix() {
+    unsigned int n = bodies.size();
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            hsqMatrix[i][j] = hsq(bodies[i], bodies[j]);
+        }
+    }
+    validHsqMatrix = true;
+}
+```
+Ah, i forgot to go up to $n-1$ instead of $n$. Same thing in the update function. Uh, it still crashes...
+
+Aaahhh oops, I forgot to allocate the memory for the hsq matrix. Amazing, now it doesn't crash anymore. But... nothing is
+rendered anymore.
+
+
+Mhm, it looks like the object that is detected as the warping object (which should be the sun), is located there:
+```
+---- Position ----
+X (real): 895681, (sim): 0.000895681
+Y (real): 1.29207e+06, (sim): 0.00129207
+Z (real): 0, (sim): 0
+```
+Which is slightly far away, but still, in sim coordinates it should be {0, 0}. Although I think that it should be Z that is
+non zero.
+
+Ok, but even if I don't call universe.update(), i don't see the objects, so there must be something wrong with the 
+UniverseRenderer. Hmm, after taking a good 2 second look, I forgot to call `body.draw()`...... Uh, that didn't help.
+
+I had also forgot to scale the position of the warping object. Also, it is possible that the .update() is called too often on the
+bodies, I need to call them only once after having updated the velocities.
+
+Yayyy!! We see something again, notably, spaceTime is back. It was a reference issue with the vector. However, the bodies
+are quite interesting now:
+![image](img/2026-06-29_wtf.png)
+
+I talked to gemini since it's kinda strange, and he says it's because the universe copies the Bodies into its vector, but then
+they have dangling pointers to the VAO structures, which means everything is broken. For spacetime it works because the object
+is created, and not passed through the vector. I'll push that for now, but I guess if I split the physics from the rendering 
+for the Bodies (like I was planning to do), it should be okay
