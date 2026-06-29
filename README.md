@@ -639,3 +639,21 @@ Ahh, perfect, now it works. the problem was that I had the vPos and the normal i
 I passed to the fragment shader was in world space.
 
 I changed the resolution to 50 for the spheres, it looks much better 🤩
+
+I realized that the spacetime mesh is broken. It doesn't curve anymore for some reason
+
+## 29/06
+Hello. I couldn't finish the spacetime curvature fix yesterday unfortunately, but I sat down 10 minutes ago, and realized
+that the Schwarzchild radius that is being sent to the spaceTime shader is not scaled, which probably completely breaks everything. So,
+To test, I sent a schwartzchild radius that was 5, and it worked. This is slightly annoying, because if we want to use the 
+real $r_S$, its value is roughly 3000 for the sun, and if we scale it down using our distance scale, we scale it down by 
+1 billion, so it will be invisible.
+
+I also do not want the spacetime mesh to be subject to the lighting engine that we made yesterday. I'll just create another
+shader for it.
+![image](img/2026-06-29_fixed_spacetime_curvature.png)
+It also looks a bit weird because the earth is below the paraboloid. (I removed the rendering for the sun in the picture).
+
+Also, while trying to fix the spaceTime mesh, I abandonned the idea of passing multiple masses that would each curve spacetime,
+since we figured it was not additive last time. So instead, I just directly send $r_S$, and the position of the object that curves
+spacetime

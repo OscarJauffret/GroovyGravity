@@ -43,8 +43,8 @@ int main() {
     glEnable(GL_DEPTH_TEST);
 
     std::string dir = SHADER_DIR;
-    Shader objectShader((dir + "/object.vert").c_str(), (dir + "/common.frag").c_str());
-    Shader spaceTimeShader((dir + "/spaceTime.vert").c_str(), (dir + "/common.frag").c_str());
+    Shader objectShader((dir + "/object.vert").c_str(), (dir + "/object.frag").c_str());
+    Shader spaceTimeShader((dir + "/spaceTime.vert").c_str(), (dir + "/spaceTime.frag").c_str());
 
     FixedCamera camera(300, glm::vec3(0.0f, 0.0f, 0.0f), numbers::pi/4);
 
@@ -71,8 +71,7 @@ int main() {
     Object earth(config::CelestialBodies::Earth, 10);
 
     earth.setVz(29290);
-    //earth.setVx(-150);
-    SpaceTime spaceTime(200, 10e9 * 2.5);
+    SpaceTime spaceTime(200, 152e9 * 2.5);
     float lastFrame = 0.0f;
     bool  rHeldLastFrame = false;
 
@@ -113,10 +112,13 @@ int main() {
         spaceTimeShader.setMat4("uView", camera.getViewMatrix(camPos));
         spaceTimeShader.setMat4("uProj", projection);
 
-        auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object& object, int id) {
-            spaceTimeShader.setVec3("objects[" + std::to_string(id) + "]", glm::vec3(object.getMass(), scaleDistanceForRender(object.getX()), scaleDistanceForRender(object.getZ())));
+        auto sendObjectToSpaceTimeShader = [&spaceTimeShader](Object& obj) {
+            double rs = 2 * config::physics::G * obj.getMass() / (config::physics::c * config::physics::c);
+            cout << "rs: " << rs << endl;
+            spaceTimeShader.setFloat("rs", 5);
+            spaceTimeShader.setVec2("objectPos", glm::vec2(scaleDistanceForRender(obj.getX()), scaleDistanceForRender(obj.getY())));
         };
-        sendObjectToSpaceTimeShader(sun, 0);
+        sendObjectToSpaceTimeShader(sun);
         //spaceTime.draw();
 
         objectShader.use();

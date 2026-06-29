@@ -9,7 +9,7 @@
 namespace config {
 
     namespace render {
-        constexpr int angular_resolution = 20;      // How many vertices are used to make a circle (this is used to make spheres)
+        constexpr int angular_resolution = 50;      // How many vertices are used to make a circle (this is used to make spheres)
         constexpr double distanceScale = 1.0 / 1000000000;    // How much to scale the distances by for rendering
 
     }
@@ -33,7 +33,7 @@ namespace config {
     };
 
     struct CelestialBodies {
-        inline static const CelestialBody Sun {1.989e+30, 696000000.0,{0.0, 0.0, 0.0}, {252, 229, 112}};
+        inline static const CelestialBody Sun {1.989e+30, 695700000.0,{0.0, 0.0, 0.0}, {252, 229, 112}};
         inline static const CelestialBody Earth {5.9722e+24, 6371000.0, {152.1e9, 0.0, 0.0}, {192, 200, 255}};
     };
 }
