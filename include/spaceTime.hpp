@@ -16,7 +16,7 @@ class SpaceTime: public Drawable {
 public:
     /**
      * This function creates a space time mesh drawable object that shows a mesh of size x size meters. This mesh is bent
-     * by the objects that are sent to the space time shader.
+     * by the celestial body that is sent to the space time shader.
      *
      * @param resolution Resolution of the space time mesh (only matters for visualization)
      * @param size Size of the space time mesh in meters, resized using the config::render::scale

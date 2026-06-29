@@ -4,16 +4,16 @@
 
 #include "objectUtils.hpp"
 
-void orbit(Object& o1, Object& o2, double hsq) {
-    double dx = o2.getX() - o1.getX();
-    double dy = o2.getY() - o1.getY();
-    double dz = o2.getZ() - o1.getZ();
+void orbit(CelestialBody& b1, CelestialBody& b2, double hsq) {
+    double dx = b2.getX() - b1.getX();
+    double dy = b2.getY() - b1.getY();
+    double dz = b2.getZ() - b1.getZ();
 
     double rsq = dx * dx + dy * dy + dz * dz;
     double r = sqrt(rsq);
 
-    double mass1 = o1.getMass();
-    double mass2 = o2.getMass();
+    double mass1 = b1.getMass();
+    double mass2 = b2.getMass();
 
     double f1 = (config::physics::G * mass1 * mass2 / rsq);
     double f2 = (3 * config::physics::G * mass1 * mass2 * hsq) / (config::physics::c * config::physics::c * rsq * rsq);
@@ -27,23 +27,23 @@ void orbit(Object& o1, Object& o2, double hsq) {
     double ay2 = -f / mass2 * dy / r;
     double az2 = -f / mass2 * dz / r;
 
-    o1.setVx(o1.getVx() + ax1 * config::physics::dt);
-    o1.setVy(o1.getVy() + ay1 * config::physics::dt);
-    o1.setVz(o1.getVz() + az1 * config::physics::dt);
+    b1.setVx(b1.getVx() + ax1 * config::physics::dt);
+    b1.setVy(b1.getVy() + ay1 * config::physics::dt);
+    b1.setVz(b1.getVz() + az1 * config::physics::dt);
 
-    o2.setVx(o2.getVx() + ax2 * config::physics::dt);
-    o2.setVy(o2.getVy() + ay2 * config::physics::dt);
-    o2.setVz(o2.getVz() + az2 * config::physics::dt);
+    b2.setVx(b2.getVx() + ax2 * config::physics::dt);
+    b2.setVy(b2.getVy() + ay2 * config::physics::dt);
+    b2.setVz(b2.getVz() + az2 * config::physics::dt);
 }
 
-double hsq(Object& o1, Object& o2) {
-    double dx = o2.getX() - o1.getX();
-    double dy = o2.getY() - o1.getY();
-    double dz = o2.getZ() - o1.getZ();
+double hsq(CelestialBody& b1, CelestialBody& b2) {
+    double dx = b2.getX() - b1.getX();
+    double dy = b2.getY() - b1.getY();
+    double dz = b2.getZ() - b1.getZ();
 
-    double dvx = o2.getVx() - o1.getVx();
-    double dvy = o2.getVy() - o1.getVy();
-    double dvz = o2.getVz() - o1.getVz();
+    double dvx = b2.getVx() - b1.getVx();
+    double dvy = b2.getVy() - b1.getVy();
+    double dvz = b2.getVz() - b1.getVz();
 
     double hx = (dy * dvz) - (dz * dvy);
     double hy = (dz * dvx) - (dx * dvz);
@@ -52,10 +52,10 @@ double hsq(Object& o1, Object& o2) {
     return hx * hx + hy * hy + hz * hz;
 }
 
-glm::vec3 center(Object& o, bool scaledToRender) {
-    double x = o.getX();
-    double y = o.getY();
-    double z = o.getZ();
+glm::vec3 center(CelestialBody& b, bool scaledToRender) {
+    double x = b.getX();
+    double y = b.getY();
+    double z = b.getZ();
     if (scaledToRender) {
         x = scaleDistanceForRender(x);
         y = scaleDistanceForRender(y);

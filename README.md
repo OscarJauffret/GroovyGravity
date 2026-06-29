@@ -656,4 +656,14 @@ It also looks a bit weird because the earth is below the paraboloid. (I removed 
 
 Also, while trying to fix the spaceTime mesh, I abandonned the idea of passing multiple masses that would each curve spacetime,
 since we figured it was not additive last time. So instead, I just directly send $r_S$, and the position of the object that curves
-spacetime
+spacetime.
+
+For now, I'll just continue without spacetime because i don't know what to do. 
+
+Let's add more planets! before just throwing them there, I'd like to have a clean data structure where I can easily add 
+planets or stars, and that takes care of the updates. I guess this is also a good time to refactor the "Object" class into
+"CelestialBody".
+
+Great, renaming was fairly easy with Clion, and i just needed to update the CMake. I'll also update the comments. 
+
+Alright, looks like everything's good for the rename now. 
