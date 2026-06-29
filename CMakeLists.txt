@@ -30,6 +30,7 @@ add_executable(${PROJECT_NAME}
         src/bodyUtils.cpp
         src/universe.cpp
         src/universeRenderer.cpp
+        src/bodyRenderer.cpp
 )
 
 add_executable(test

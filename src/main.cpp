@@ -2,6 +2,7 @@
 // Created by Oscar Jauffret on 17/06/2026.
 //
 
+#include "bodyRenderer.hpp"
 #include "universeRenderer.hpp"
 #if defined(__ARM_NEON) || defined(__aarch64__)
 // For Apple Silicon / ARM64
@@ -66,8 +67,8 @@ int main() {
     });
 
     Universe universe;
-    universe.addBody(presets::Sun(20.0));
-    universe.addBody(presets::Earth(5.0));
+    universe.addBody(presets::Sun());
+    universe.addBody(presets::Earth());
 
     UniverseRenderer universeRenderer(SHADER_DIR);
 
@@ -96,7 +97,7 @@ int main() {
 
         window.clear(0.1f, 0.1f, 0.12f, 1.0f);  // clears color + depth by default
 
-        //universe.update();
+        universe.update();
         universeRenderer.render(universe, camera, projection, spaceTime);
 
 

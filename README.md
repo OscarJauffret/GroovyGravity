@@ -767,3 +767,22 @@ I talked to gemini since it's kinda strange, and he says it's because the univer
 they have dangling pointers to the VAO structures, which means everything is broken. For spacetime it works because the object
 is created, and not passed through the vector. I'll push that for now, but I guess if I split the physics from the rendering 
 for the Bodies (like I was planning to do), it should be okay
+
+I think I will abandon putting the color of the planets into the vertices. Instead, we will just have one mesh for all bodies,
+and this mesh will be scaled with respect to the radius of the planets. I also thought, instead od using a render radius, maybe
+we can use something like the log of the real radius?
+
+Cooooool, it works now, we see the planets again
+![image](img/2026-06-29_vertical_orbit.gif)
+2 issues still: We need the colors back, and for some reason, the orbit is now vertical...
+Hm, and also, i'll just put a white color for all vertices of `BodyRenderer`, and we'll figure something out later
+to have one color per planet.
+
+Since the refactor (but I'm only seeing it now, since the visualization was broken before), the orbit is on a vertical plane 
+instead of horizontal. I suspect it is because we are now using vectors for the positions and velocities, and probably the
+system of axes of openGL and glm are not the same? Ahhh wait no.... i'm stupid, and gave the Earth a default velocity in $y$
+instead of $x$. Ok, it's not in $x$, but in $z$ that we need it.
+
+![image](img/2026-06-29_fixed.gif)
+
+Cool, so just the color left.
