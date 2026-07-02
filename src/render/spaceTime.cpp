@@ -2,7 +2,7 @@
 // Created by Oscar Jauffret on 17/06/2026.
 //
 
-#include "spaceTime.hpp"
+#include "render/spaceTime.hpp"
 
 SpaceTime::SpaceTime(int resolution, double size) {
     std::vector<float> vertices;

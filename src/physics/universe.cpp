@@ -2,7 +2,7 @@
 // Created by Oscar Jauffret on 29/06/2026.
 //
 
-#include "universe.hpp"
+#include "physics/universe.hpp"
 
 void Universe::addBody(Body body) {
     bodies.emplace_back(body);

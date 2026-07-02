@@ -2,7 +2,7 @@
 // Created by Oscar Jauffret on 29/06/2026.
 //
 
-#include "bodyRenderer.hpp"
+#include "render/bodyRenderer.hpp"
 #include "numbers"
 
 

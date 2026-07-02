@@ -2,8 +2,8 @@
 // Created by Oscar Jauffret on 17/06/2026.
 //
 
-#include "bodyRenderer.hpp"
-#include "universeRenderer.hpp"
+#include "render/bodyRenderer.hpp"
+#include "render/universeRenderer.hpp"
 #if defined(__ARM_NEON) || defined(__aarch64__)
 // For Apple Silicon / ARM64
 __attribute__((constructor)) static void __enable_ftz_daz(void) {
@@ -31,12 +31,11 @@ __attribute__((constructor)) static void __enable_ftz_daz(void) {
 #include <graphics/window.hpp>
 #include <graphics/fixedCamera.hpp>
 #include <graphics/shader.hpp>
-#include "body.hpp"
-#include "config.hpp"
-#include "spaceTime.hpp"
-#include "bodyUtils.hpp"
-#include "universe.hpp"
-#include "presets.hpp"
+#include "physics/body.hpp"
+#include "config/config.hpp"
+#include "render/spaceTime.hpp"
+#include "physics/universe.hpp"
+#include "config/presets.hpp"
 
 int main() {
     Window window(config::window::width, config::window::height, "Groovy Gravity");

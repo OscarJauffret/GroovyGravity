@@ -4,7 +4,7 @@
 
 #ifndef GROOVYGRAVITY_PRESETS_HPP
 #define GROOVYGRAVITY_PRESETS_HPP
-#include "body.hpp"
+#include "physics/body.hpp"
 
 namespace presets {
     namespace SpaceTime {

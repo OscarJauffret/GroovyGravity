@@ -8,7 +8,7 @@
 #include <iostream>
 #include <vector>
 
-#include "config.hpp"
+#include "config/config.hpp"
 
 using namespace std;
 

@@ -4,7 +4,7 @@
 
 #ifndef GROOVYGRAVITY_BODYRENDERER_HPP
 #define GROOVYGRAVITY_BODYRENDERER_HPP
-#include "body.hpp"
+#include "physics/body.hpp"
 #include "drawable.hpp"
 
 class BodyRenderer: public Drawable {

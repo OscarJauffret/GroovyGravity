@@ -2,10 +2,10 @@
 // Created by Oscar Jauffret on 17/06/2026.
 //
 
-#include "body.hpp"
+#include "physics/body.hpp"
 #include <vector>
 
-#include "config.hpp"
+#include "config/config.hpp"
 #include <iostream>
 #include <numbers>
 

@@ -4,7 +4,7 @@
 
 #ifndef GROOVYGRAVITY_BODYUTILS_HPP
 #define GROOVYGRAVITY_BODYUTILS_HPP
-#include "config.hpp"
+#include "config/config.hpp"
 #include "body.hpp"
 
 /**

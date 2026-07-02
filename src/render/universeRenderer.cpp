@@ -2,10 +2,10 @@
 // Created by Oscar Jauffret on 29/06/2026.
 //
 
-#include "universeRenderer.hpp"
+#include "render/universeRenderer.hpp"
 #include <iostream>
 
-#include "presets.hpp"
+#include "config/presets.hpp"
 
 
 using std::cerr;

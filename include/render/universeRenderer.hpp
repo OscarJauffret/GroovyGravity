@@ -6,7 +6,7 @@
 #define GROOVYGRAVITY_UNIVERSERENDERER_HPP
 
 #include "bodyRenderer.hpp"
-#include "universe.hpp"
+#include "physics/universe.hpp"
 #include "graphics/fixedCamera.hpp"
 #include "graphics/shader.hpp"
 #include "spaceTime.hpp"

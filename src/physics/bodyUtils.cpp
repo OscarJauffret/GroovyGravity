@@ -2,7 +2,7 @@
 // Created by Oscar Jauffret on 25/06/2026.
 //
 
-#include "bodyUtils.hpp"
+#include "physics/bodyUtils.hpp"
 
 #include <glm/ext/quaternion_geometric.hpp>
 
