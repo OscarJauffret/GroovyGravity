@@ -797,4 +797,22 @@ Cool, the colors work again, but the balls are fuzzy
 
 Found it, I had just forgotten to remove the color layout in the creation of the spheres.
 
-I also reorganized the repo into directories
+I also reorganized the repo into directories.
+
+Pff, I wanted to try to add the moon, but it gets drawn in the same location as the earth, so it doesn't really work. I don't know what to do...
+It is because of the scaling, the moon and the earth are separated by $384400000 / 10^9 = 0.3844$ opengl units, which is not a lot.
+
+what if we just forgot about the moon for now?
+
+I added all of the planets, but some are too far away to render.. I wonder if we should use a log scale for the distances for the rendering
+
+If i just increase the render distance, we can see pretty much all of them:
+![image](img/2026-07-02_all_planets.png)
+
+Now, i need to uncomment the update function, and see if everything works......
+
+
+Woohoooo!!! all planets seem to be orbiting fine, I don't know if it's normal that mercury is so fast, but whatever for now
+![gif](img/2026-07-02_all_planets_orbiting.gif)
+
+It's like barely visible with the gif compression, sorry

@@ -9,6 +9,7 @@
 enum class BodyType {
     Planet,
     Star,
+    Satellite,
     Blackhole
 };
 

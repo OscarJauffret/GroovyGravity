@@ -60,14 +60,23 @@ int main() {
             auto* cam = static_cast<FixedCamera*>(glfwGetWindowUserPointer(w));
             float d = cam->distance;
             d -= (float)yoffset;
+            float maxDistance = 2000.0f;
             if (d < 30.0f) d = 30.0f;
-            if (d > 500.0f) d = 500.0f;
+            if (d > maxDistance) d = maxDistance;
             cam->setDistance(d);
     });
 
     Universe universe;
     universe.addBody(presets::Sun::create());
     universe.addBody(presets::Earth::create());
+    //universe.addBody(presets::Moon::create());
+    universe.addBody(presets::Mercury::create());
+    universe.addBody(presets::Venus::create());
+    universe.addBody(presets::Mars::create());
+    universe.addBody(presets::Jupiter::create());
+    universe.addBody(presets::Saturn::create());
+    universe.addBody(presets::Uranus::create());
+    universe.addBody(presets::Neptune::create());
 
     UniverseRenderer universeRenderer(SHADER_DIR);
 
@@ -79,7 +88,7 @@ int main() {
         glm::radians(45.0f),
         static_cast<float>(config::window::width) / static_cast<float>(config::window::height),
         0.1f,
-        1000.0f
+        10000.0f
     );
 
     while (!window.shouldClose()) {

@@ -53,7 +53,7 @@ void UniverseRenderer::render(Universe& universe, FixedCamera& camera, const glm
     };
 
     sendObjectToSpaceTimeShader(warpingObject);
-    spaceTime.draw();
+    //spaceTime.draw();
 
 
     bodyShader.use();
