@@ -796,3 +796,5 @@ Cool, the colors work again, but the balls are fuzzy
 ![image](img/2026-07-02_colors_but_fuzzy.png)
 
 Found it, I had just forgotten to remove the color layout in the creation of the spheres.
+
+I also reorganized the repo into directories
