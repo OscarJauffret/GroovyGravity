@@ -20,7 +20,7 @@ namespace config {
     }
 
     namespace physics {
-        constexpr double dt = 40000;       // timestep (used to compute next orbit step)
+        constexpr double dt = 10000;       // timestep (used to compute next orbit step)
         constexpr double G = 6.6743e-11;    // Universal gravitational constant
         constexpr double c = 299792458.0f;  // Speed of light in a vacuum
     }

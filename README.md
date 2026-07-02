@@ -820,3 +820,7 @@ It's like barely visible with the gif compression, sorry
 The camera movement is kind of confusing if you use it for more than 5 seconds, which is likely due to the lack of reference,
 or maybe just because it's on the trackpad. Also, I realize that I forgot to implement the "clicking on another planet to change
 the point of view". This is a problem for later.
+
+Let's try with a logarithmic scale for the distances instead of the fixed divider. Nice, it looks good!!
+
+![gif](img/2026-07-02_all_planets_orbit_log.gif)

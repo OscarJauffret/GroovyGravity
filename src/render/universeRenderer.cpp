@@ -63,7 +63,24 @@ void UniverseRenderer::render(Universe& universe, FixedCamera& camera, const glm
 
     auto sendBodyToCBShader = [this, &warpingObject](const Body& body) {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(scaleDistanceForRender(body.getPos())));
+
+        glm::dvec3 sunPos = warpingObject.getPos();
+        glm::dvec3 realPos = body.getPos();
+        glm::vec3 compressedPos;
+
+        if (body.getType() == BodyType::Star) {
+            compressedPos = glm::vec3(0.0f);
+        } else {
+            glm::dvec3 relativePos = realPos - sunPos;
+            double distance = glm::length(relativePos);
+            glm::dvec3 direction = relativePos / distance;
+            double alpha = 1e-9;
+            double spreadMultiplier = 35.0;
+            double compressedDistance = log2(alpha * distance + 1.0) * spreadMultiplier;
+            compressedPos = glm::vec3(direction * compressedDistance);
+        }
+        model = glm::translate(model, compressedPos);
+
         model = glm::scale(model, glm::vec3(log10(body.getRadius())));
         bodyShader.setMat4("uModel", model);
         bodyShader.setBool("lightSource", body.getType() == BodyType::Star);
