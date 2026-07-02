@@ -38,16 +38,11 @@ protected:
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
-        int stride = 6;
+        int stride = 3;
         int positionSize = 3;
         // Layout 0: Position
         glVertexAttribPointer(0, positionSize, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
-
-        // Layout 1: color
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float),
-                              (void*)(positionSize * sizeof(float)));
-        glEnableVertexAttribArray(1);
 
         glBindVertexArray(0);
     }

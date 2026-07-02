@@ -786,3 +786,13 @@ instead of $x$. Ok, it's not in $x$, but in $z$ that we need it.
 ![image](img/2026-06-29_fixed.gif)
 
 Cool, so just the color left.
+
+# 02/07
+Hello! So... what to do for the color? I think i'll pass uniforms to the shaders. That seems simple. Then, i'll just give
+the colors to the Body objects. Sure it breaks the physics/rendering separation a little bit, but for now it's clearly the most 
+convenient.
+
+Cool, the colors work again, but the balls are fuzzy
+![image](img/2026-07-02_colors_but_fuzzy.png)
+
+Found it, I had just forgotten to remove the color layout in the creation of the spheres.

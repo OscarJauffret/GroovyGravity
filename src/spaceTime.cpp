@@ -4,8 +4,7 @@
 
 #include "spaceTime.hpp"
 
-SpaceTime::SpaceTime(int resolution, double size, glm::vec3 color) {
-    normalizeRGB(color);
+SpaceTime::SpaceTime(int resolution, double size) {
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
 
@@ -20,9 +19,6 @@ SpaceTime::SpaceTime(int resolution, double size, glm::vec3 color) {
             vertices.push_back(x);      // X
             vertices.push_back(0.0f); // Y
             vertices.push_back(z);      // Z
-            vertices.push_back(color[0]);
-            vertices.push_back(color[1]);
-            vertices.push_back(color[2]);
         }
     }
 

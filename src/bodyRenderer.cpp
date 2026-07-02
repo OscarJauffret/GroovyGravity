@@ -20,11 +20,6 @@ BodyRenderer::BodyRenderer() {
             vertices.push_back(xp);
             vertices.push_back(yp);
             vertices.push_back(zp);
-
-            // color
-            vertices.push_back(1.0);
-            vertices.push_back(1.0);
-            vertices.push_back(1.0);
         }
     }
 

@@ -5,6 +5,8 @@
 #include "universeRenderer.hpp"
 #include <iostream>
 
+#include "presets.hpp"
+
 
 using std::cerr;
 using std::endl;
@@ -47,6 +49,7 @@ void UniverseRenderer::render(Universe& universe, FixedCamera& camera, const glm
         spaceTimeShader.setFloat("rs", 5);  //TODO: figure out what to do with rs
         glm::vec3 pos = scaleDistanceForRender(body.getPos());
         spaceTimeShader.setVec2("objectPos", glm::vec2(pos.x, pos.y));
+        spaceTimeShader.setVec3("color", presets::SpaceTime::color);
     };
 
     sendObjectToSpaceTimeShader(warpingObject);
@@ -65,6 +68,7 @@ void UniverseRenderer::render(Universe& universe, FixedCamera& camera, const glm
         bodyShader.setMat4("uModel", model);
         bodyShader.setBool("lightSource", body.getType() == BodyType::Star);
         bodyShader.setVec3("sunPosition", glm::vec3(scaleDistanceForRender(warpingObject.getPos())));
+        bodyShader.setVec3("color", body.getColor());
     };
 
     for (auto& b: universe.getBodies()) {

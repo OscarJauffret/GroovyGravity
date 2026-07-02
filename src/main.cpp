@@ -67,8 +67,8 @@ int main() {
     });
 
     Universe universe;
-    universe.addBody(presets::Sun());
-    universe.addBody(presets::Earth());
+    universe.addBody(presets::Sun::create());
+    universe.addBody(presets::Earth::create());
 
     UniverseRenderer universeRenderer(SHADER_DIR);
 

@@ -21,6 +21,8 @@ private:
     glm::dvec3 pos;      // Current position of the body (in meters relative to the origin)
     glm::dvec3 vel;      // Current velocity og the body in m/s
 
+    glm::vec3 color;    // The color in which to render the body
+
 public:
     /**
      * Initializes a body
@@ -29,9 +31,10 @@ public:
      * @param radius Radius of the body in meters (resized using config::render::scale)
      * @param pos Initial position of the body ({x, y, z})
      * @param vel Initial velocity of the body ({vx, vy, vz})
+     * @param color The color of the body
      */
-    Body(const BodyType type, const double mass, const double radius, glm::dvec3 pos, glm::dvec3 vel):
-    type(type), mass(mass), radius(radius), pos(pos), vel(vel) {}
+    Body(const BodyType type, const double mass, const double radius, glm::dvec3 pos, glm::dvec3 vel, glm::vec3 color):
+    type(type), mass(mass), radius(radius), pos(pos), vel(vel), color(color) {}
 
     // Getters and setters
     [[nodiscard]] BodyType getType() const;
@@ -39,6 +42,7 @@ public:
     [[nodiscard]] double getRadius() const;
     [[nodiscard]] glm::dvec3 getPos() const;
     [[nodiscard]] glm::dvec3 getVel() const;
+    [[nodiscard]] glm::vec3 getColor() const;
 
     void setPos(glm::dvec3 pos);
     void setVel(glm::dvec3 vel);
